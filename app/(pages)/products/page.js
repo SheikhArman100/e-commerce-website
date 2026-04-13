@@ -191,7 +191,7 @@ const Shop = () => {
             </div>
           ) : (
             <div className="relative z-10 w-full flex flex-col items-center">
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4  gap-6 sm:gap-8 md:gap-12 w-full  place-items-center mx-auto ">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4  gap-6 sm:gap-8 md:gap-12 w-full max-w-6xl  place-items-center mx-auto  ">
                 {data.data.map((product, index) => {
                   const allFlavorImages = product.flavors?.flatMap(f => f.images) || [];
                   const flavorColors = [...new Set(product.flavors?.map(f => f.flavor?.color).filter(Boolean))];
