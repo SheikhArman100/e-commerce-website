@@ -1,0 +1,218 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 44.4 100% 97.5%;
+    --foreground: 13 25% 29%;
+
+    --card: 44.4 100% 97.5%;
+    --card-foreground: 13 25% 29%;
+
+    --popover: 44.4 100% 97.5%;
+    --popover-foreground: 13 25% 29%;
+
+    --primary: 344 64% 37%;
+    --primary-foreground: 44.4 100% 97.5%;
+
+    --secondary: 0 69% 86%;
+    --secondary-foreground: 344 64% 37%;
+
+    --muted: 0 69% 95%;
+    --muted-foreground: 13 25% 45%;
+
+    --accent: 0 69% 90%;
+    --accent-foreground: 344 64% 37%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 13 25% 90%;
+    --input: 13 25% 90%;
+    --ring: 344 64% 37%;
+
+    --radius: 0.1rem;
+  }
+}
+
+@layer base {
+  /* global reset values */
+  * {
+    @apply m-0 box-border p-0 border-border ;
+  }
+  html {
+    @apply overflow-x-hidden focus-within:scroll-smooth bg-bgColor text-textColor;
+  }
+
+  /* avoid vw or screen to reduce overflow */
+  body {
+    @apply w-full h-full mx-auto bg-bgColor text-textColor;
+  }
+  ul,
+  ol {
+    @apply list-none;
+  }
+  a {
+    @apply no-underline;
+  }
+  button,
+  input {
+    @apply outline-0 font2;
+  }
+  img {
+    @apply block max-w-full;
+  }
+  iframe {
+    @apply border-0;
+  }
+  /* * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  } */
+}
+
+@layer components {
+  /* reuseable components */
+}
+@layer utilities {
+  .font2 {
+    font-family: var(--font-roboto);
+  }
+
+  .mask {
+    mask-image: linear-gradient(black, black), url(../public/assets/mask.svg);
+    mask-composite: exclude;
+    mask-repeat: no-repeat;
+    mask-size: auto;
+
+    mask-position:center center,center top 14rem
+  }
+  @media (min-width: 768px) {
+    .mask {
+        
+      mask-position:center center,center top 64%
+    }
+}
+@media(min-width:1400px)  {
+  .mask{
+
+    mask-position:center center,center top 62%
+  }
+}
+
+  .overlay {
+    filter: blur(0.5px) drop-shadow(0 0 0 #c9c7c7);
+  }
+  .overlay:before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      #0002 0 2px,
+      transparent 2px 40vmin
+    );
+    animation: vlines 3s steps(1) infinite;
+  }
+
+  @keyframes vlines {
+    0%,
+    100% {
+      transform: translateX(0);
+      opacity: 0.5;
+    }
+    10% {
+      transform: translateX(-1%);
+    }
+    20% {
+      transform: translateX(1%);
+    }
+    30% {
+      transform: translateX(-2%);
+      opacity: 0.75;
+    }
+    40% {
+      transform: translateX(3%);
+    }
+    50% {
+      transform: translateX(-3%);
+      opacity: 0.5;
+    }
+    60% {
+      transform: translateX(8%);
+    }
+    70% {
+      transform: translateX(-3%);
+    }
+    80% {
+      transform: translateX(10%);
+      opacity: 0.25;
+    }
+    90% {
+      transform: translateX(-2%);
+    }
+  }
+
+  .overlay:after {
+    content: "";
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    top: 0;
+    left: 0;
+    opacity: 0.2;
+    background-image: repeating-conic-gradient(
+        black 0%,
+        transparent 0.00003%,
+        transparent 0.0005%,
+        transparent 0.00095%
+      ),
+      repeating-conic-gradient(
+        black 0%,
+        transparent 0.00005%,
+        transparent 0.00015%,
+        transparent 0.0009%
+      );
+    animation: grains 1s steps(1) infinite;
+  }
+
+  @keyframes grains {
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+    10% {
+      transform: translate(-1%, -1%);
+    }
+    20% {
+      transform: translate(1%, 1%);
+    }
+    30% {
+      transform: translate(-2%, -2%);
+    }
+    40% {
+      transform: translate(3%, 3%);
+    }
+    50% {
+      transform: translate(-3%, -3%);
+    }
+    60% {
+      transform: translate(4%, 4%);
+    }
+    70% {
+      transform: translate(-4%, -4%);
+    }
+    80% {
+      transform: translate(2%, 2%);
+    }
+    90% {
+      transform: translate(-3%, -3%);
+    }
+  }
+}
