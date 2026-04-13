@@ -29,13 +29,37 @@ const ShowCart = () => {
 
   if (items.length === 0) {
     return (
-      <div className="w-full h-[60vh] flex flex-col items-center justify-center gap-y-6">
-        <p className="text-stone-500 font-light tracking-widest uppercase text-xs">Your cart is currently empty</p>
-        <Button href="/products" className="bg-accentColor rounded-sm hover:bg-accentColor/90 transition-all duration-300 shadow-lg">
-          <Button.Border1 className="border-accentColor2/30 z-[1]" />
-          <Button.Border2 className="border-accentColor2/30 z-[2]" />
-          <Button.Title className="font-black uppercase tracking-[0.2em] text-[0.7rem] text-bgColor">Explore Collections</Button.Title>
+      <div className="w-full flex-1 flex flex-col items-center justify-center py-24 text-center">
+        {/* Elegant Empty State Graphic */}
+        <div className="w-28 h-28 mb-10 text-black/20 flex items-center justify-center border border-textColor/10 rounded-full bg-textColor/5 relative">
+          <svg 
+            className="w-10 h-10 text-accentColor/30" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+            strokeWidth={1}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 11-8 0v4M5 9h14l1 12H4L5 9z" />
+          </svg>
+          <div className="absolute top-0 right-0 w-4 h-4 bg-accentColor2 rounded-full blur-sm opacity-50" />
+        </div>
+
+        <h3 className="text-2xl md:text-3xl font-medium text-textColor mb-4 tracking-tight">Your Cart is Empty</h3>
+        <p className="text-stone-500 font-light mb-10 max-w-sm mx-auto leading-relaxed">
+          It seems you haven't discovered your next favorite indulgence yet. Explore our curated collections of artisanal delicacies.
+        </p>
+
+        <Button href="/products" className="min-w-[14rem] h-14 bg-accentColor rounded-sm hover:bg-accentColor/90 transition-all duration-300 shadow-xl border-0 group">
+          <Button.Border1 className="border-accentColor2/30 z-[1] group-hover:scale-x-105 transition-transform" />
+          <Button.Border2 className="border-accentColor2/30 z-[2] group-hover:scale-x-105 transition-transform" />
+          <Button.Title className="font-black uppercase tracking-[0.3em] text-[0.7rem] text-bgColor">Start Shopping</Button.Title>
         </Button>
+
+        <div className="mt-16 flex items-center gap-x-4 opacity-20">
+          <div className="h-px w-8 bg-textColor" />
+          <span className="text-[0.5rem] tracking-[0.5em] uppercase font-black">Baking Tales</span>
+          <div className="h-px w-8 bg-textColor" />
+        </div>
       </div>
     );
   }

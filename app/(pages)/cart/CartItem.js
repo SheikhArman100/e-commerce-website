@@ -98,21 +98,21 @@ const CartItem = ({
           </div>
 
           {/* Premium Quantity Control */}
-          <div className="flex items-center gap-x-4 px-3 py-1 bg-white/[0.03] border border-white/5 rounded-full">
+          <div className="flex items-center gap-x-4 px-3 py-1  bg-textColor rounded-full">
             <button 
               onClick={() => handleUpdateQuantity(-1)}
               disabled={quantity <= 1 || updateQuantityMutation.isPending}
-              className="text-stone-500 hover:text-white transition-colors disabled:opacity-20"
+              className="text-white transition-colors disabled:opacity-20"
             >
               <Minus size={12} />
             </button>
-            <span className={`text-[0.65rem] font-black tracking-widest w-4 text-center ${updateQuantityMutation.isPending ? 'text-accentColor animate-pulse' : 'text-stone-300'}`}>
+            <span className={`text-[0.65rem] font-black tracking-widest w-4 text-center text-white ${updateQuantityMutation.isPending ? 'text-accentColor animate-pulse' : 'text-textColor'}`}>
               {quantity}
             </span>
             <button 
               onClick={() => handleUpdateQuantity(1)}
               disabled={quantity >= 10 || updateQuantityMutation.isPending}
-              className="text-stone-500 hover:text-white transition-colors disabled:opacity-20"
+              className="text-white transition-colors disabled:opacity-20"
             >
               <Plus size={12} />
             </button>
@@ -123,17 +123,17 @@ const CartItem = ({
       {/* Pricing & Actions */}
       <div className="flex flex-col items-end gap-y-3 pl-4">
         <div className="flex flex-col items-end">
-          <span className="text-sm font-bold text-white tracking-tighter">
-            ${price?.toFixed(2)}
+          <span className="text-sm font-bold text-textColor tracking-tighter">
+            ৳{price?.toFixed(2)}
           </span>
           {isDiscounted && (
             <span className="text-[0.6rem] text-stone-500 line-through tracking-widest opacity-60">
-              ${originalPrice?.toFixed(2)}
+              ৳{originalPrice?.toFixed(2)}
             </span>
           )}
         </div>
         
-        <div className="opacity-40 hover:opacity-100 transition-opacity">
+        <div className=" transition-opacity">
           <DeleteButton cartId={cartId} />
         </div>
       </div>

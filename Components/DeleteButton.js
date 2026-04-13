@@ -41,8 +41,8 @@ const DeleteButton = ({cartId}) => {
           <div className="absolute -top-10 -right-10 w-32 h-32 bg-accentColor/10 blur-3xl rounded-full pointer-events-none" />
 
           <section className="flex flex-col items-center text-center">
-            <div className="mb-6 p-4 rounded-full border border-white/5 bg-white/[0.02]">
-               <Trash2 size={32} className="stroke-accentColor opacity-80" />
+            <div className="mb-6 p-4 rounded-full border border-white">
+               <Trash2 size={32} className="stroke-accentColor " />
             </div>
             
             <span className="text-[0.6rem] uppercase tracking-[0.4em] font-black text-stone-500 mb-2">
@@ -56,7 +56,7 @@ const DeleteButton = ({cartId}) => {
 
           <section className="flex gap-x-4 w-full">
             <button
-              className="flex-1 py-4 border border-white/10 hover:border-white/20 text-[0.65rem] uppercase tracking-[0.3em] font-black text-stone-400 transition-all active:scale-95"
+              className="flex-1 py-4 border border-white/10 hover:border-white/20 text-[0.65rem] uppercase tracking-[0.3em] font-black text-stone-400 transition-all active:scale-95 bg-white"
               onClick={() => deleteModal.current?.close()}
             >
               Cancel
