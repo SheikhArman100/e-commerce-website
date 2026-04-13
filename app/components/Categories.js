@@ -123,7 +123,7 @@ const Categories = ({ categories = [] }) => {
                   </button>
                 ))}
               </div>
-              <Button href="/products" className="mt-4 bg-accentColor rounded-sm hover:bg-accentColor/90 transition-all duration-300 shadow-lg">
+              <Button href="/products" className="w-48 h-12 md:w-56 md:h-14 mt-4 bg-accentColor rounded-sm hover:bg-accentColor/90 transition-all duration-300 shadow-lg">
                 <Button.Border1 />
                 <Button.Border2 />
                 <Button.Title className="text-bgColor">Explore Collections</Button.Title>
