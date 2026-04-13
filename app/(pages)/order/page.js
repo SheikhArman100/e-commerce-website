@@ -18,7 +18,9 @@ const Order = () => {
       return response.data;
     },
   })
-  const orders=data?.orders
+
+  const orders=data?.data
+  
 
   if (isPending) {
     return (
@@ -54,8 +56,15 @@ const Order = () => {
       <div className="h-px w-full bg-textColor/10 mt-12 mb-16" />
       <section className=' w-full flex justify-center items-center '>
         <div className='w-full max-w-3xl  grid grid-cols-1'>
-        {orders.map((order,index)=>(
-            <OrderList key={index} orderId={order.id} totalAmount={order.totalAmount} status={order.status} createdAt={order.createdAt} paymentMethod={order.paymentMethod} product={order.orderItem}/>
+        {orders?.map((order,index)=>(
+            <OrderList 
+              key={index} 
+              orderId={order.id} 
+              totalAmount={order.payableAmount || order.totalAmount} 
+              status={order.status} 
+              createdAt={order.createdAt} 
+              items={order.items || []}
+            />
           ))}
         </div>
           
