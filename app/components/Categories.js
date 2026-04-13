@@ -43,14 +43,14 @@ const Categories = ({ categories = [] }) => {
   }, [activeCategoryId, backendURL]);
 
   return (
-    <article className="relative w-full h-screen">
+    <article className="relative w-full min-h-screen xl:h-screen">
       {!categories.length ? (
         <section className="w-full h-full flex items-center justify-center">
           <p className="text-3xl text-textColor font2">No categories found!</p>
         </section>
       ) : (
-        <section className="w-full h-full flex flex-col md:flex-row gap-y-16">
-          <div className="relative w-full h-[45%] md:h-full md:w-1/2 overflow-hidden">
+        <section className="w-full h-full flex flex-col xl:flex-row gap-y-16">
+          <div className="relative w-full h-[50vh] xl:h-full xl:w-1/2 overflow-hidden">
             <Image
               src={CategoryImage}
               alt="categories section image"
@@ -61,16 +61,16 @@ const Categories = ({ categories = [] }) => {
             <div className="absolute inset-0 bg-accentColor/5" />
           </div>
 
-          <div className=" absolute top-[33%] md:top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 drop-shadow-[0_10px_30px_rgba(155,34,66,0.15)]">
+          <div className=" absolute top-[40%] xl:top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 drop-shadow-[0_10px_30px_rgba(155,34,66,0.15)]">
             {isLoading ? (
-               <div className="flex items-center justify-center p-20 bg-white/40 backdrop-blur-md rounded-3xl border border-white/50 w-full max-w-[400px]">
+               <div className="flex items-center justify-center p-20 bg-white/40 backdrop-blur-xl rounded-3xl border border-white/50 w-full max-w-[400px]">
                 <Loader2 className="h-8 w-8 animate-spin text-accentColor" />
               </div>
             ) : product ? (() => {
               const allFlavorImages = product.flavors?.flatMap(f => f.images) || [];
               const flavorColors = [...new Set(product.flavors?.map(f => f.flavor?.color).filter(Boolean))];
-              const bgRemovePath = allFlavorImages.find(img => img.path.toLowerCase().includes("removebg"))?.path;
-              const mainImagePath = allFlavorImages.find(img => !img.path.toLowerCase().includes("removebg"))?.path || allFlavorImages[0]?.path;
+              const bgRemovePath = allFlavorImages[0]?.path
+              // const mainImagePath = allFlavorImages.find(img => !img.path.toLowerCase().includes("removebg"))?.path || allFlavorImages[0]?.path;
               const allPrices = product.flavors?.flatMap(f => f.sizes?.map(s => s.price)).filter(p => p !== undefined && p !== null) || [];
               const minPrice = allPrices.length > 0 ? Math.min(...allPrices) : "0";
               const categoryImagePath = product.category?.image?.path;
@@ -101,7 +101,7 @@ const Categories = ({ categories = [] }) => {
               </div>
             )}
           </div>
-          <div className="w-full md:w-[50%] flex flex-col items-center justify-center py-12 md:py-0">
+          <div className="w-full xl:w-[50%] flex flex-col items-center justify-center py-12 xl:py-0">
             <div className="flex items-center justify-center gap-x-1 mb-8">
               <Star fill="#9B2242" stroke="none" className="h-4 w-4" />
               <p className="text-textColor text-[0.7rem] font-bold uppercase tracking-[0.3em]">
@@ -114,7 +114,7 @@ const Categories = ({ categories = [] }) => {
                 {categories.map((cat) => (
                   <button
                     key={cat.id}
-                    className={`text-3xl md:text-5xl lg:text-7xl transition-all duration-500 hover:text-accentColor uppercase tracking-tighter ${
+                    className={`text-2xl sm:text-3xl md:text-5xl lg:text-7xl transition-all duration-500 hover:text-accentColor uppercase tracking-tighter ${
                       activeCategoryId === cat.id ? "opacity-100 font-bold scale-110" : "opacity-30 font-medium hover:opacity-60"
                     }`}
                     onClick={() => setActiveCategoryId(cat.id)}

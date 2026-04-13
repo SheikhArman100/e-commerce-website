@@ -8,7 +8,7 @@ import { Star } from 'lucide-react'
 
 const Card = ({className,children}) => {
   return (
-    <div className={twMerge("relative h-64 w-[10.5rem] sm:h-72 sm:w-60 md:w-64 md:h-80  p-2 sm:p-3 shadow-sm hover:shadow-md transition-all duration-300 rounded-sm border border-textColor/10 bg-textColor/5",className)}>
+    <div className={twMerge("relative h-64 w-[10.5rem] sm:h-72 sm:w-60 md:w-64 md:h-80  p-2 sm:p-3 shadow-sm hover:shadow-md transition-all duration-300 rounded-sm border border-textColor/10 bg-white",className)}>
         {children}
     </div>
   )
