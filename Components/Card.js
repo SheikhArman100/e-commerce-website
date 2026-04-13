@@ -8,7 +8,7 @@ import { Star } from 'lucide-react'
 
 const Card = ({className,children}) => {
   return (
-    <div className={twMerge("relative h-64 w-[10.5rem] sm:h-72 sm:w-60 md:w-64 md:h-80 bg-bgColor p-2 sm:p-3 shadow-sm hover:shadow-md transition-all duration-300 rounded-sm border border-textColor/5",className)}>
+    <div className={twMerge("relative h-64 w-[10.5rem] sm:h-72 sm:w-60 md:w-64 md:h-80  p-2 sm:p-3 shadow-sm hover:shadow-md transition-all duration-300 rounded-sm border border-textColor/10 bg-textColor/5",className)}>
         {children}
     </div>
   )
@@ -89,7 +89,7 @@ const BgRemoveImage=({className,bgRemoveImage})=>{
                 alt="card image bg remove"
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="object-fit object-center w-full h-full p-2 scale-110 transition-transform group-hover/card:scale-125 duration-500"
+                className="object-fit object-center w-full h-full p-2 scale-110 transition-transform "
             />
         ) : (
             <span className="text-xs text-textColor/30 font-medium italic">Gallery Pending</span>
