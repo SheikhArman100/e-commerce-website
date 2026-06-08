@@ -41,7 +41,9 @@ const Shop = () => {
     const params = new URLSearchParams(searchParams.toString());
     
     Object.entries(updates).forEach(([key, value]) => {
-      if (value === null || value === '' || value === undefined || value === 'all') {
+      // Only strip truly empty values. We keep 0, false, and 'all' so every
+      // filter the user has selected is preserved in the shareable URL.
+      if (value === null || value === undefined || value === '') {
         params.delete(key);
       } else {
         params.set(key, value.toString());
@@ -104,8 +106,8 @@ const Shop = () => {
   return (
     <div className="relative w-full min-h-screen bg-bgColor text-textColor flex flex-col  pt-24 md:pt-36 lg:pt-40 pb-24 px-6 md:px-12 lg:px-24 overflow-hidden">
       {/* Cinematic Atmosphere */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accentColor/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-accentColor2/5 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2" />
+      <div className="pointer-events-none absolute top-0 right-0 w-[500px] h-[500px] bg-accentColor/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
+      <div className="pointer-events-none absolute bottom-0 left-0 w-[600px] h-[600px] bg-accentColor2/5 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2" />
 
       {/* Boutique Header Section */}
       <div className="relative z-10 flex flex-col items-center mb-12">

@@ -1,26 +1,86 @@
+"use client";
 import useFlavors from '@/hooks/useFlavors';
 import useSizes from '@/hooks/useSizes';
-import { SlidersHorizontal, Star, X } from "lucide-react";
+import { Check, SlidersHorizontal, Star, X } from "lucide-react";
+import { useEffect, useState } from 'react';
 
 import PriceSlider from './PriceSlider';
+
+// Slider bounds. The URL will always carry minPrice/maxPrice so the link
+// is shareable end-to-end.
+const SLIDER_MIN = 0;
+const SLIDER_MAX = 500;
 
 const FilterMobile = ({ isOpen, onClose, filters, onFilterChange, onClearFilters }) => {
   const { data: flavorsData } = useFlavors();
   const { data: sizesData } = useSizes();
 
-  if (!isOpen) return null;
+  // Local draft state — only pushed to the parent when the user clicks "Apply"
+  // We always keep numeric minPrice/maxPrice (never collapse to null) so the
+  // URL contains a complete, shareable record of the user's selection.
+  const [localFilters, setLocalFilters] = useState(() => ({
+    inStock: filters.inStock ?? null,
+    minPrice: filters.minPrice != null ? Number(filters.minPrice) : SLIDER_MIN,
+    maxPrice: filters.maxPrice != null ? Number(filters.maxPrice) : SLIDER_MAX,
+    flavorName: filters.flavorName || '',
+    sizeName: filters.sizeName || '',
+  }));
+
+  // Keep the draft in sync with the parent (e.g. URL changes, etc.)
+  useEffect(() => {
+    if (isOpen) {
+      setLocalFilters({
+        inStock: filters.inStock ?? null,
+        minPrice: filters.minPrice != null ? Number(filters.minPrice) : SLIDER_MIN,
+        maxPrice: filters.maxPrice != null ? Number(filters.maxPrice) : SLIDER_MAX,
+        flavorName: filters.flavorName || '',
+        sizeName: filters.sizeName || '',
+      });
+    }
+  }, [filters.inStock, filters.minPrice, filters.maxPrice, filters.flavorName, filters.sizeName, isOpen]);
+
+  // Detect if the draft differs from the currently applied filters
+  const hasChanges =
+    (localFilters.inStock ?? null) !== (filters.inStock ?? null) ||
+    Number(localFilters.minPrice) !== (filters.minPrice != null ? Number(filters.minPrice) : SLIDER_MIN) ||
+    Number(localFilters.maxPrice) !== (filters.maxPrice != null ? Number(filters.maxPrice) : SLIDER_MAX) ||
+    (localFilters.flavorName || '') !== (filters.flavorName || '') ||
+    (localFilters.sizeName || '') !== (filters.sizeName || '');
 
   const handleInStockToggle = () => {
-    onFilterChange({ ...filters, inStock: filters.inStock === 'true' ? null : 'true' });
+    setLocalFilters((prev) => ({
+      ...prev,
+      inStock: prev.inStock === 'true' ? null : 'true',
+    }));
   };
 
   const handleSliderChange = ({ min, max }) => {
-    onFilterChange({ ...filters, minPrice: min, maxPrice: max });
+    setLocalFilters((prev) => ({
+      ...prev,
+      minPrice: min,
+      maxPrice: max,
+    }));
   };
 
   const handleSelectFilter = (field, value) => {
-    onFilterChange({ ...filters, [field]: filters[field] === value ? '' : value });
+    setLocalFilters((prev) => ({
+      ...prev,
+      [field]: prev[field] === value ? '' : value,
+    }));
   };
+
+  const handleApply = () => {
+    onFilterChange({
+      inStock: localFilters.inStock,
+      minPrice: localFilters.minPrice,
+      maxPrice: localFilters.maxPrice,
+      flavorName: localFilters.flavorName,
+      sizeName: localFilters.sizeName,
+    });
+    onClose();
+  };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-[100] lg:hidden">
@@ -55,7 +115,7 @@ const FilterMobile = ({ isOpen, onClose, filters, onFilterChange, onClearFilters
               <label className="flex items-center gap-3 cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={filters.inStock === 'true'}
+                  checked={localFilters.inStock === 'true'}
                   onChange={handleInStockToggle}
                   className="w-5 h-5 rounded-sm border-accentColor/40 bg-transparent text-accentColor focus:ring-accentColor/20"
                 />
@@ -74,9 +134,12 @@ const FilterMobile = ({ isOpen, onClose, filters, onFilterChange, onClearFilters
             </h3>
             <div className="pl-5 pr-2">
               <PriceSlider 
-                min={0} 
-                max={500} 
-                value={{ min: Number(filters.minPrice) || 0, max: Number(filters.maxPrice) || 500 }}
+                min={SLIDER_MIN} 
+                max={SLIDER_MAX}
+                value={{
+                  min: localFilters.minPrice,
+                  max: localFilters.maxPrice,
+                }}
                 onChange={handleSliderChange}
               />
             </div>
@@ -94,7 +157,7 @@ const FilterMobile = ({ isOpen, onClose, filters, onFilterChange, onClearFilters
                   key={flavor.id}
                   onClick={() => handleSelectFilter('flavorName', flavor.name)}
                   className={`px-4 py-2 rounded-full border text-sm transition-all ${
-                    filters.flavorName === flavor.name
+                    localFilters.flavorName === flavor.name
                       ? 'bg-accentColor text-bgColor border-accentColor'
                       : 'bg-accentColor/5 text-stone-500 border-accentColor/20'
                   }`}
@@ -117,7 +180,7 @@ const FilterMobile = ({ isOpen, onClose, filters, onFilterChange, onClearFilters
                   key={size.id}
                   onClick={() => handleSelectFilter('sizeName', size.name)}
                   className={`px-4 py-2 rounded-full border text-sm transition-all ${
-                    filters.sizeName === size.name
+                    localFilters.sizeName === size.name
                       ? 'bg-accentColor text-bgColor border-accentColor'
                       : 'bg-accentColor/5 text-stone-500 border-accentColor/20'
                   }`}
@@ -129,19 +192,25 @@ const FilterMobile = ({ isOpen, onClose, filters, onFilterChange, onClearFilters
           </div>
         </div>
 
-        {/* Footer Actions */}
+        {/* Footer Actions: only Apply + Clear All */}
         <div className="p-6 bg-bgColor/50 border-t border-accentColor/10 grid grid-cols-2 gap-4">
           <button 
             onClick={onClearFilters}
-            className="h-12 border border-accentColor/30 text-accentColor/60 uppercase tracking-widest text-[0.7rem] font-bold hover:bg-accentColor/5 transition-all"
+            className="h-12 border border-accentColor/30 text-accentColor/60 uppercase tracking-widest text-[0.7rem] font-bold hover:bg-accentColor/5 hover:text-accentColor transition-all"
           >
             Clear All
           </button>
           <button 
-            onClick={onClose}
-            className="h-12 bg-accentColor text-bgColor uppercase tracking-widest text-[0.7rem] font-bold hover:shadow-lg hover:shadow-accentColor/20 transition-all font2"
+            onClick={handleApply}
+            disabled={!hasChanges}
+            className={`h-12 uppercase tracking-widest text-[0.7rem] font-bold transition-all font2 flex items-center justify-center gap-2 ${
+              hasChanges
+                ? 'bg-accentColor text-bgColor hover:shadow-lg hover:shadow-accentColor/20'
+                : 'bg-accentColor/10 text-accentColor/40 cursor-not-allowed'
+            }`}
           >
-            Apply
+            <Check className="h-3.5 w-3.5" />
+            Apply Filters
           </button>
         </div>
       </div>

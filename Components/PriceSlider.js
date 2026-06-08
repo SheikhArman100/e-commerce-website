@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 
 const PriceSlider = ({ min = 0, max = 1000, value = { min: null, max: null }, onChange }) => {
-  const [minVal, setMinVal] = useState(value.min || min);
-  const [maxVal, setMaxVal] = useState(value.max || max);
-  const minValRef = useRef(value.min || min);
-  const maxValRef = useRef(value.max || max);
+  // Use nullish coalescing so a real 0 isn't treated as "use default"
+  const [minVal, setMinVal] = useState(value.min ?? min);
+  const [maxVal, setMaxVal] = useState(value.max ?? max);
+  const minValRef = useRef(value.min ?? min);
+  const maxValRef = useRef(value.max ?? max);
   const rangeRef = useRef(null);
 
   // Convert to percentage
@@ -36,9 +37,14 @@ const PriceSlider = ({ min = 0, max = 1000, value = { min: null, max: null }, on
   }, [maxVal, getPercent]);
 
   // Sync with prop changes (e.g. from Clear Filters)
+  // Use nullish coalescing so a legitimate 0 value isn't lost
   useEffect(() => {
-    setMinVal(value.min || min);
-    setMaxVal(value.max || max);
+    const newMin = value.min ?? min;
+    const newMax = value.max ?? max;
+    setMinVal(newMin);
+    setMaxVal(newMax);
+    minValRef.current = newMin;
+    maxValRef.current = newMax;
   }, [value.min, value.max, min, max]);
 
   const handleMinChange = (event) => {
