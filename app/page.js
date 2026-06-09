@@ -38,24 +38,20 @@ async function getFeaturedProducts() {
   }
 }
 
+/**
+ * Fetches the single currently-running campaign (isActive=true AND inside its
+ * date window) along with its products already hydrated and priced.
+ *
+ * Returns the campaign object or `null` if there is no active campaign right now.
+ */
 async function getActiveCampaign() {
   try {
-    const response = await fetch(`${backendURL}/campaigns?isActive=true&limit=1`, { cache: 'no-store' });
+    const response = await fetch(`${backendURL}/campaigns/active`, { cache: 'no-store' });
     const data = await response.json();
-    return data?.data?.[0] || null;
+    // The backend's sendResponse wrapper: { success, statusCode, message, data }
+    return data?.data ?? null;
   } catch (error) {
     console.error("Error fetching active campaign:", error);
-    return null;
-  }
-}
-
-async function getCampaignDetails(id) {
-  try {
-    const response = await fetch(`${backendURL}/campaigns/${id}`, { cache: 'no-store' });
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching campaign details:", error);
     return null;
   }
 }
@@ -78,13 +74,9 @@ export default async function Home() {
     getActiveCampaign(),
   ]);
 
-  let campaignProducts = [];
-  if (activeCampaign) {
-    const campaignId = activeCampaign._id || activeCampaign.id;
-    const campaignDetails = await getCampaignDetails(campaignId);
-    campaignProducts = campaignDetails?.data?.products || [];
-  }
-
+  // The /campaigns/active response already includes the products array
+  // with campaign pricing applied, so no second round-trip is needed.
+  const campaignProducts = activeCampaign?.products ?? [];
   const featuredProducts = featuredData?.data || [];
   const categories = categoriesData?.data || [];
 
@@ -93,8 +85,8 @@ export default async function Home() {
       <HomeSection>
         <Header />
         <HomeContainer>
-          <FeaturedItem 
-            products={featuredProducts} 
+          <FeaturedItem
+            products={featuredProducts}
             campaign={activeCampaign}
             campaignProducts={campaignProducts}
           />
@@ -102,10 +94,10 @@ export default async function Home() {
           <Categories categories={categories} />
           <Journal />
         </HomeContainer>
-          <Services />   
+          <Services />
           <Footer />
       </HomeSection>
-      
+
     </main>
   );
 }

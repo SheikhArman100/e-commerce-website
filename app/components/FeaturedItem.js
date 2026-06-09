@@ -1,11 +1,11 @@
 import Button from "@/Components/Button";
 import Card from "@/Components/Card";
-import { ArrowRight, Plus, Star } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
 
 const FeaturedItem = ({ products, campaign, campaignProducts }) => {
   const isCampaignActive = campaign && campaignProducts?.length > 0;
   const items = isCampaignActive ? campaignProducts : (products || []);
-  
+
   return (
     <section className="w-full min-h-fit flex flex-col justify-start py-4 md:py-[4rem] px-0 md:px-[4rem]">
       <div className="flex flex-col items-center mb-5">
@@ -20,7 +20,7 @@ const FeaturedItem = ({ products, campaign, campaignProducts }) => {
         <h3 className="text-4xl md:text-5xl lg:text-6xl text-textColor font2 text-center">
           {isCampaignActive ? `${campaign.title}` : "Featured"}
         </h3>
-        
+
         <div className="w-full flex justify-center md:justify-end mt-4">
           <Button className="flex bg-accentColor rounded-sm hover:bg-accentColor/90 transition-all duration-300" href="/products">
             <Button.Border1 />
@@ -40,7 +40,7 @@ const FeaturedItem = ({ products, campaign, campaignProducts }) => {
           <div className="p-4 md:p-8 grid grid-cols-2 lg:grid-cols-3  gap-y-6 sm:gap-y-16 gap-x-3 sm:gap-x-12 lg:gap-x-16 place-items-center mx-auto w-full max-w-[1200px] ">
             {items.map((entry, i) => {
               const fileBase = process.env.NEXT_PUBLIC_FILE_URL;
-              
+
               // Handle campaign product structure (nested) vs regular product structure
               const item = isCampaignActive ? entry.product : entry;
               if (!item) return null;
@@ -48,68 +48,78 @@ const FeaturedItem = ({ products, campaign, campaignProducts }) => {
               // Aggregate flavors and images
               const allFlavorImages = item.flavors?.flatMap(f => f.images) || [];
               const flavorColors = [...new Set(item.flavors?.map(f => f.flavor?.color).filter(Boolean))];
-              
-              // Find images
-              const mainImagePath =allFlavorImages[0]?.path;
-              
-              // Pricing logic
-              let minPrice = "0";
+
+              const mainImagePath = allFlavorImages[0]?.path;
+
+              // ─── Pricing ─────────────────────────────────────────────────
+              // Initialize as numbers (0 not "0") so downstream code can do
+              // numeric math without coercion.
+              let minPrice = 0;
               let minSalesPrice = null;
-              let maxDiscount = entry.customDiscountPercentage || 0;
+              let maxDiscount = Number(entry.customDiscountPercentage) || 0;
 
               if (isCampaignActive) {
-                // Campaign pricing is nested in flavors -> sizes as per API example
-                const campaignPrices = item.flavors?.flatMap(f => f.sizes?.map(s => ({
-                  original: s.originalPrice,
-                  sales: s.salesPrice,
-                  discount: s.discountPercentage
-                }))) || [];
-                
+                // Backend now pre-computes `originalPrice` / `salesPrice` / `discountPercentage`
+                // on every size. Find the cheapest sales price across all flavors/sizes.
+                const campaignPrices = (item.flavors || []).flatMap(
+                  (f) => (f.sizes || []).map((s) => ({
+                    original: s.originalPrice,
+                    sales: s.salesPrice,
+                    discount: s.discountPercentage,
+                  }))
+                );
+
                 if (campaignPrices.length > 0) {
-                  // Find the cheapest option to display on the card
-                  const cheapest = campaignPrices.reduce((prev, curr) => 
-                    (prev.sales && curr.sales && prev.sales < curr.sales) ? prev : (prev.sales ? prev : curr)
-                  );
-                  minPrice = cheapest.original;
-                  minSalesPrice = cheapest.sales;
-                  // If custom discount wasn't set on the entry, derive from calculated size discount
+                  // Pick the entry with the lowest sales price.
+                  const cheapest = campaignPrices.reduce((min, curr) => {
+                    const minSales = Number(min?.sales ?? Infinity);
+                    const currSales = Number(curr?.sales ?? Infinity);
+                    return currSales < minSales ? curr : min;
+                  });
+                  minPrice = Number(cheapest.original) || 0;
+                  minSalesPrice =
+                    Number(cheapest.sales ?? cheapest.original) || null;
                   if (!maxDiscount) {
-                    maxDiscount = Math.max(...campaignPrices.map(p => p.discount || 0));
+                    maxDiscount = campaignPrices.reduce(
+                      (m, p) => Math.max(m, Number(p.discount) || 0),
+                      0
+                    );
                   }
                 }
               } else {
-                // Regular pricing logic
-                const allPrices = item.flavors?.flatMap(f => f.sizes?.map(s => s.price)).filter(p => p !== undefined && p !== null) || [];
-                minPrice = allPrices.length > 0 ? Math.min(...allPrices) : "0";
+                // Regular pricing logic — base `size.price` per size.
+                const allPrices = (item.flavors || [])
+                  .flatMap((f) => (f.sizes || []).map((s) => Number(s.price)))
+                  .filter((p) => Number.isFinite(p));
+                minPrice = allPrices.length > 0 ? Math.min(...allPrices) : 0;
               }
 
               // Category Image
               const categoryImagePath = item.category?.image?.path;
 
               return (
-              <Card key={i}>
-                <Card.CardContainer>
-                  {maxDiscount > 0 && (
-                    <Card.Badge>
-                      {maxDiscount}% OFF
-                    </Card.Badge>
-                  )}
-                  <Card.CategoryIcon 
-                    category={item.category?.name?.toLowerCase()} 
-                    categoryImage={categoryImagePath ? `${fileBase}/${categoryImagePath}` : null}
-                  />
-                  <Card.FlavorColors colors={flavorColors} />
-                  <Card.BgRemoveImage bgRemoveImage={`${fileBase}/${mainImagePath}`} />
-                  <Card.CardInfo 
-                    title={item.title} 
-                    price={minPrice} 
-                    salesPrice={minSalesPrice}
-                    discountPercentage={maxDiscount}
-                    href={`/products/${item.slug}`}
-                  />
-                  {/* Removed hover image and button wrapper as per refactoring plan */}
-                </Card.CardContainer>
-              </Card>
+                <Card key={i}>
+                  <Card.CardContainer>
+                    {maxDiscount > 0 && (
+                      <Card.Badge>
+                        {maxDiscount}% OFF
+                      </Card.Badge>
+                    )}
+                    <Card.CategoryIcon
+                      category={item.category?.name?.toLowerCase()}
+                      categoryImage={categoryImagePath ? `${fileBase}/${categoryImagePath}` : null}
+                    />
+                    <Card.FlavorColors colors={flavorColors} />
+                    <Card.BgRemoveImage bgRemoveImage={`${fileBase}/${mainImagePath}`} />
+                    <Card.CardInfo
+                      title={item.title}
+                      price={minPrice}
+                      salesPrice={minSalesPrice}
+                      discountPercentage={maxDiscount}
+                      href={`/products/${item.slug}`}
+                    />
+                  </Card.CardContainer>
+                </Card>
               );
             })}
           </div>
