@@ -13,7 +13,7 @@ const SizeSelect = ({ sizes }) => {
 
       <Controller
         control={control}
-        name="size"
+        name="sizeId"
         render={({ field }) => (
           <div className="flex flex-wrap gap-4">
             {sizes.map((s, index) => {

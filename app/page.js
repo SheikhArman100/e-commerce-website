@@ -46,7 +46,7 @@ async function getFeaturedProducts() {
  */
 async function getActiveCampaign() {
   try {
-    const response = await fetch(`${backendURL}/campaigns/active`, { cache: 'no-store' });
+    const response = await fetch(`${backendURL}/campaign/active`, { cache: 'no-store' });
     const data = await response.json();
     // The backend's sendResponse wrapper: { success, statusCode, message, data }
     return data?.data ?? null;

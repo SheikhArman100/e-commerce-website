@@ -36,24 +36,23 @@ const FormCart = ({ product, productId, onFlavorChange, onSizeChange, selectedFl
     handleSubmit,
     reset,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitted },
   } = methods;
 
   const watchedSizeId = watch("sizeId");
 
   useEffect(() => {
     if (onSizeChange) {
-      // Find the size name from the ID to keep the parent in sync if it needs the name
       const sizeObj = sizes.find(s => s.size?.id?.toString() === watchedSizeId);
       onSizeChange(soldByQuantity ? null : sizeObj?.size?.name);
     }
   }, [watchedSizeId, onSizeChange, soldByQuantity, sizes]);
 
   useEffect(() => {
-    if (Object.keys(errors).length > 0 && methods.formState.isSubmitted) {
+    if (Object.keys(errors).length > 0 && isSubmitted) {
       toast.error("Provide more info");
     }
-  }, [errors, methods.formState.isSubmitted]);
+  }, [errors, isSubmitted]);
 
   // add to cart mutation
   const addToCartMutation = useMutation({

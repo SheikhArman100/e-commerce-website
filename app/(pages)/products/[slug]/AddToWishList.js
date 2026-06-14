@@ -6,7 +6,6 @@ import {
   TooltipTrigger,
 } from "@/Components/ui/tooltip.jsx";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate.js";
-import useWishlist from "@/hooks/useWishlist.js";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Heart } from "lucide-react";
 import { useRouter } from "next/navigation.js";
@@ -16,16 +15,11 @@ const AddToWishList = ({ productId }) => {
   const router = useRouter();
   const axiosPrivate = useAxiosPrivate();
   const queryClient = useQueryClient();
-  // const { data } = useWishlist();
-  // const wishlist = data?.wishlist;
-  // const isInWishlist = wishlist?.some(
-  //   (product) => product.productId === productId
-  // );
 
-  // Wishlist Mutation (Atomic Toggle)
+  // Wishlist Mutation (simple POST — backend handles duplicates with 409)
   const wishlistMutation = useMutation({
-    mutationFn: async (data) => {
-      const response = await axiosPrivate.post("/wishlist", data, {
+    mutationFn: async () => {
+      const response = await axiosPrivate.post("/wishlist", { productId: String(productId) }, {
         withCredentials: true,
       });
       return response.data;
@@ -38,6 +32,8 @@ const AddToWishList = ({ productId }) => {
       if (error.response?.status === 401) {
         toast.error("Please sign in to manage your wishlist");
         router.push("/auth/signin");
+      } else if (error.response?.status === 409) {
+        toast.error("Already in your wishlist");
       } else {
         toast.error(error.response?.data?.message || "Something went wrong");
       }
@@ -45,7 +41,7 @@ const AddToWishList = ({ productId }) => {
   });
 
   const handleWishlist = () => {
-    wishlistMutation.mutate({ productId:String(productId) });
+    wishlistMutation.mutate();
   };
 
   return (
@@ -53,17 +49,18 @@ const AddToWishList = ({ productId }) => {
       <Tooltip>
         <TooltipTrigger asChild>
           <button
-          type="button"
-            className="p-2 border border-white mt-4 "
+            type="button"
+            className="p-2 border border-accentColor rounded-sm hover:bg-accentColor/10 transition-all duration-300 mt-4 lg:mt-0 h-16 w-16 flex items-center justify-center shrink-0"
             onClick={handleWishlist}
           >
             <Heart
-              strokeWidth="1"
-              className="stroke-white"
+              size={18}
+              strokeWidth={1.5}
+              className="stroke-accentColor"
             />
           </button>
         </TooltipTrigger>
-        <TooltipContent className=" bg-white text-black">
+        <TooltipContent className="bg-white text-black">
           <p className="font2">Add to library</p>
         </TooltipContent>
       </Tooltip>
