@@ -29,7 +29,7 @@ const CartItem = ({
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["cart"]);
+      queryClient.invalidateQueries({ queryKey: ["cart"], refetchType: "all" });
     },
     onError: (error) => {
       toast.error(error.response?.data?.message || "Failed to update quantity");

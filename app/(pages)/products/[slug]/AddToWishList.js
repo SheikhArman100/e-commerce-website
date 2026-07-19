@@ -26,7 +26,7 @@ const AddToWishList = ({ productId }) => {
     },
     onSuccess: async (data) => {
       toast.success(data.message || "Wishlist updated");
-      return await queryClient.invalidateQueries({ queryKey: ["wishlist"] });
+      return await queryClient.invalidateQueries({ queryKey: ["wishlist"] , refetchType: "all" });
     },
     onError: (error) => {
       if (error.response?.status === 401) {

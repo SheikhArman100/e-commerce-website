@@ -2,7 +2,7 @@ import React from "react";
 import OrderItem from "./OrderItem.js";
 import useCarts from "@/hooks/useCarts.js";
 
-const OrderList = ({ appliedCoupon, discountAmount, totalInvestment }) => {
+const OrderList = ({ appliedCoupon, discountAmount, totalInvestment, deliveryCharge }) => {
   const { data, isPending, error } = useCarts();
 
   const cartData = data?.data;
@@ -19,19 +19,19 @@ const OrderList = ({ appliedCoupon, discountAmount, totalInvestment }) => {
 
   if (error || items.length === 0) {
     return (
-      <div className="w-full p-8 border border-white/5 bg-white/[0.01] rounded-sm text-center">
-        <p className="text-[0.6rem] uppercase tracking-[0.2em] text-stone-600">No treasures found in your selection</p>
+      <div className="w-full p-8 border border-stone-200 bg-white/60 rounded-sm text-center">
+        <p className="text-[0.6rem] uppercase tracking-[0.2em] text-stone-500">No treasures found in your selection</p>
       </div>
     );
   }
 
   return (
-    <div className="p-10 bg-white/[0.02] backdrop-blur-[20px] border border-white/10 rounded-sm shadow-2xl">
+    <div className="p-10 bg-white/60 backdrop-blur-[20px] border border-stone-200 rounded-sm shadow-lg">
       <div className="flex items-center gap-x-3 mb-10">
-         <span className="text-[0.6rem] uppercase tracking-[0.4em] font-black text-stone-500">Your Selection</span>
+         <span className="text-[0.6rem] uppercase tracking-[0.4em] font-black text-stone-600">Your Selection</span>
       </div>
 
-      <div className="space-y-2 pb-10 border-b border-white/5 max-h-[50vh] overflow-y-auto custom-scrollbar pr-4">
+      <div className="space-y-2 pb-10 border-b border-stone-200">
         {items.map((item) => (
           <OrderItem
             key={item.id}
@@ -49,7 +49,7 @@ const OrderList = ({ appliedCoupon, discountAmount, totalInvestment }) => {
       <div className="pt-10 space-y-6">
         <div className="flex justify-between items-center text-stone-500">
           <p className="text-[0.65rem] uppercase tracking-[0.2em] font-black">Subtotal</p>
-          <span className="text-[0.8rem] font-medium tracking-widest text-white/80">${totals?.totalAmount?.toFixed(2)}</span>
+          <span className="text-[0.8rem] font-medium tracking-widest text-textColor">${totals?.totalAmount?.toFixed(2)}</span>
         </div>
 
         {appliedCoupon && (
@@ -63,12 +63,12 @@ const OrderList = ({ appliedCoupon, discountAmount, totalInvestment }) => {
         
         <div className="flex justify-between items-center text-stone-500">
           <p className="text-[0.65rem] uppercase tracking-[0.2em] font-black">Boutique Shipping</p>
-          <span className="text-[0.8rem] font-medium tracking-widest text-accentColor">Complimentary</span>
+          <span className="text-[0.8rem] font-medium tracking-widest text-textColor">${deliveryCharge?.toFixed(2)}</span>
         </div>
         
         <div className="flex justify-between items-center pt-2">
           <p className="text-[0.65rem] uppercase tracking-[0.3em] font-black text-stone-400">Total Investment</p>
-          <span className="text-2xl font-light tracking-tighter text-white">${totalInvestment.toFixed(2)}</span>
+          <span className="text-2xl font-light tracking-tighter text-textColor">${totalInvestment.toFixed(2)}</span>
         </div>
       </div>
     </div>

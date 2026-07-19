@@ -35,7 +35,7 @@ const FormSignup = () => {
     onSuccess: (data) => {
       setAccessToken(data.accessToken);
       toast.success(data.message || "Account created successfully!");
-      queryClient.invalidateQueries(["auth", "check"]);
+      queryClient.invalidateQueries({ queryKey: ["auth", "check"], refetchType: "all" });
       router.push("/");
       reset();
     },

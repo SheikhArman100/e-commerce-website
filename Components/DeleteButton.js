@@ -16,7 +16,7 @@ const DeleteButton = ({cartId}) => {
     },
     onSuccess: async (data) => {
       deleteModal.current.close();
-      queryClient.invalidateQueries(["cart"]);
+      queryClient.invalidateQueries({ queryKey: ["cart"], refetchType: "all" });
       toast.success(data.message || "Item removed from cart");
     },
     onError: (error) => {

@@ -43,7 +43,7 @@ const SignInForm = () => {
       console.log("signin data",data);
       setAccessToken(data.data.accessToken);
       toast.success(data.data.message || "Signed in successfully!");
-      queryClient.invalidateQueries(["auth", "check"]);
+      queryClient.invalidateQueries({ queryKey: ["auth", "check"],refetchType: "all" });
       router.push(next || "/");
       reset();
     },

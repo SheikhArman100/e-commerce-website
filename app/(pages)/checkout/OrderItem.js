@@ -15,7 +15,7 @@ const OrderItem = ({
     <div className="w-full flex items-center gap-x-6 py-4 group first:pt-0">
       {/* Small Boutique Thumb */}
       <div className="relative">
-        <div className="relative w-16 aspect-square bg-white shadow-inner overflow-hidden rounded-sm border border-white/10 group-hover:border-accentColor/30 transition-colors">
+        <div className="relative w-16 aspect-square bg-white shadow-inner overflow-hidden rounded-sm border border-stone-200 group-hover:border-accentColor/40 transition-colors">
           {image ? (
             <Image
               src={`${fileBase}/${image}`}
@@ -37,17 +37,21 @@ const OrderItem = ({
 
       {/* Item Details */}
       <div className="flex-1 min-w-0">
-        <h5 className="text-[0.7rem] uppercase tracking-widest text-white font-bold leading-tight line-clamp-1 mb-1">{title}</h5>
+        <h5 className="text-[0.7rem] uppercase tracking-widest text-textColor font-bold leading-tight line-clamp-1 mb-1">{title}</h5>
         <div className="flex items-center gap-3">
           <span className="text-[0.55rem] uppercase tracking-widest text-stone-500 font-bold">{category}</span>
           {flavor && (
-            <span className="text-[0.55rem] uppercase tracking-widest text-accentColor/60 font-black">• {flavor.name}</span>
+            <span
+              className="inline-block w-3 h-3 rounded-full border border-stone-300 flex-shrink-0"
+              style={{ backgroundColor: flavor.color || '#ccc' }}
+              title={flavor.name}
+            />
           )}
         </div>
       </div>
 
       <div className="text-right">
-        <p className="text-[0.75rem] font-bold text-white tracking-widest">${(price * quantity).toFixed(2)}</p>
+        <p className="text-[0.75rem] font-bold text-textColor tracking-widest">${(price * quantity).toFixed(2)}</p>
       </div>
     </div>
   );

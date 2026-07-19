@@ -21,7 +21,7 @@ const ShowWishlist = () => {
     },
     onSuccess: async (data) => {
       toast.success(data.message || "Removed from wishlist");
-      return await queryClient.invalidateQueries({ queryKey: ["wishlist"] });
+      return await queryClient.invalidateQueries({ queryKey: ["wishlist"], refetchType: "all" });
     },
     onError: (error) => {
       toast.error(error.response?.data?.message || "Failed to remove from wishlist");

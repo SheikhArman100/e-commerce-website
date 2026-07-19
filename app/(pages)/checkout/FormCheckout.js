@@ -37,12 +37,12 @@ const FormCheckout = ({ appliedCoupon, setAppliedCoupon, subtotal }) => {
         onError: (err) => {
           setCouponError(err.response?.data?.message || "Invalid coupon code");
         },
-      }
+      },
     );
   };
 
   const userInfo = profileData;
-  
+
   if (isPending) {
     return (
       <div className="w-full h-[40vh] flex items-center justify-center">
@@ -50,28 +50,35 @@ const FormCheckout = ({ appliedCoupon, setAppliedCoupon, subtotal }) => {
       </div>
     );
   }
-  
+
   if (error) {
     return (
       <div className="w-full h-[40vh] flex items-center justify-center">
-        <p className="text-stone-500 uppercase tracking-widest text-xs">Something went wrong during retrieval</p>
+        <p className="text-stone-500 uppercase tracking-widest text-xs">
+          Something went wrong during retrieval
+        </p>
       </div>
     );
   }
 
-  const inputClasses = "w-full rounded-sm border border-white/10 bg-white/[0.02] backdrop-blur-md px-6 py-4 text-[0.8rem] text-white placeholder:text-stone-600 focus:border-accentColor/50 focus:outline-0 transition-all duration-300 shadow-inner";
-  const labelClasses = "text-[0.6rem] uppercase tracking-[0.3em] font-black text-stone-500 mb-3 block";
-  const errorClasses = "text-[0.6rem] font-bold text-red-500 mt-2 tracking-wider flex items-center gap-1 uppercase before:content-['*']";
+  const inputClasses =
+    "w-full rounded-sm border border-stone-300 bg-white/80 backdrop-blur-md px-6 py-4 text-[0.8rem] text-textColor placeholder:text-stone-400 focus:border-accentColor focus:outline-0 transition-all duration-300 shadow-sm";
+  const labelClasses =
+    "text-[0.6rem] uppercase tracking-[0.3em] font-black text-stone-600 mb-3 block";
+  const errorClasses =
+    "text-[0.6rem] font-bold text-red-500 mt-2 tracking-wider flex items-center gap-1 uppercase before:content-['*']";
 
   return (
     <div className="w-full flex flex-col gap-y-16">
       {/* Shipping Section */}
       <section>
         <div className="flex items-center gap-x-6 mb-10">
-           <span className="text-[0.6rem] uppercase tracking-[0.4em] font-black text-white whitespace-nowrap">Shipping Destination</span>
-           <div className="h-[1px] flex-1 bg-white/5" />
+          <span className="text-[0.6rem] uppercase tracking-[0.4em] font-black text-stone-600 whitespace-nowrap">
+            Shipping Destination
+          </span>
+          <div className="h-[1px] flex-1 bg-stone-200" />
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10 mt-2">
           {/* full name */}
           <div className="md:col-span-2">
@@ -83,7 +90,9 @@ const FormCheckout = ({ appliedCoupon, setAppliedCoupon, subtotal }) => {
               placeholder="e.g. Jean-Luc Picard"
               className={inputClasses}
             />
-            {errors.fullName?.message && <p className={errorClasses}>{errors.fullName?.message}</p>}
+            {errors.fullName?.message && (
+              <p className={errorClasses}>{errors.fullName?.message}</p>
+            )}
           </div>
 
           {/* email */}
@@ -94,7 +103,7 @@ const FormCheckout = ({ appliedCoupon, setAppliedCoupon, subtotal }) => {
               {...register("email")}
               value={userInfo?.email || ""}
               readOnly
-              className={`${inputClasses} cursor-not-allowed`}
+              className={`${inputClasses} cursor-not-allowed opacity-60`}
             />
           </div>
 
@@ -108,7 +117,9 @@ const FormCheckout = ({ appliedCoupon, setAppliedCoupon, subtotal }) => {
               placeholder="+1 (555) 000-0000"
               className={inputClasses}
             />
-            {errors.phoneNumber?.message && <p className={errorClasses}>{errors.phoneNumber?.message}</p>}
+            {errors.phoneNumber?.message && (
+              <p className={errorClasses}>{errors.phoneNumber?.message}</p>
+            )}
           </div>
 
           {/* Shipping Address */}
@@ -121,7 +132,9 @@ const FormCheckout = ({ appliedCoupon, setAppliedCoupon, subtotal }) => {
               placeholder="Avenue des Champs-Élysées, 75008 Paris"
               className={inputClasses}
             />
-            {errors.address?.message && <p className={errorClasses}>{errors.address?.message}</p>}
+            {errors.address?.message && (
+              <p className={errorClasses}>{errors.address?.message}</p>
+            )}
           </div>
 
           {/* City */}
@@ -134,7 +147,9 @@ const FormCheckout = ({ appliedCoupon, setAppliedCoupon, subtotal }) => {
               placeholder="Paris"
               className={inputClasses}
             />
-            {errors.city?.message && <p className={errorClasses}>{errors.city?.message}</p>}
+            {errors.city?.message && (
+              <p className={errorClasses}>{errors.city?.message}</p>
+            )}
           </div>
 
           {/* House Details */}
@@ -147,7 +162,9 @@ const FormCheckout = ({ appliedCoupon, setAppliedCoupon, subtotal }) => {
               placeholder="Flat 4A"
               className={inputClasses}
             />
-            {errors.road?.message && <p className={errorClasses}>{errors.road?.message}</p>}
+            {errors.road?.message && (
+              <p className={errorClasses}>{errors.road?.message}</p>
+            )}
           </div>
         </div>
       </section>
@@ -155,14 +172,16 @@ const FormCheckout = ({ appliedCoupon, setAppliedCoupon, subtotal }) => {
       {/* Coupon Section */}
       <section className="flex flex-col gap-y-12">
         {/* Boutique Coupons */}
-        <div className="p-8 border border-white/5 bg-white/[0.01] rounded-sm relative overflow-hidden">
+        <div className="p-8 border border-stone-200 bg-white/60 rounded-sm relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
-            <Ticket size={120} className="stroke-white" />
+            <Ticket size={120} className="stroke-stone-400" />
           </div>
 
           <div className="flex items-center gap-x-6 mb-8">
-             <span className="text-[0.6rem] uppercase tracking-[0.4em] font-black text-stone-400 whitespace-nowrap">Artisanal Rewards</span>
-             <div className="h-[1px] flex-1 bg-white/5" />
+            <span className="text-[0.6rem] uppercase tracking-[0.4em] font-black text-stone-600 whitespace-nowrap">
+              Artisanal Rewards
+            </span>
+            <div className="h-[1px] flex-1 bg-stone-200" />
           </div>
 
           {appliedCoupon ? (
@@ -170,13 +189,18 @@ const FormCheckout = ({ appliedCoupon, setAppliedCoupon, subtotal }) => {
               <div className="flex items-center gap-4">
                 <Ticket size={20} className="stroke-accentColor" />
                 <div>
-                  <p className="text-[0.7rem] uppercase tracking-widest font-black text-accentColor">{appliedCoupon.code}</p>
+                  <p className="text-[0.7rem] uppercase tracking-widest font-black text-accentColor">
+                    {appliedCoupon.code}
+                  </p>
                   <p className="text-[0.55rem] uppercase tracking-widest text-stone-500 mt-1">
-                    {appliedCoupon.discountType === "PERCENTAGE" ? `${appliedCoupon.discountValue}% OFF` : `$${appliedCoupon.discountValue} OFF`} APPLIED
+                    {appliedCoupon.discountType === "PERCENTAGE"
+                      ? `${appliedCoupon.discountValue}% OFF`
+                      : `$${appliedCoupon.discountValue} OFF`}{" "}
+                    APPLIED
                   </p>
                 </div>
               </div>
-              <button 
+              <button
                 type="button"
                 onClick={() => setAppliedCoupon(null)}
                 className="p-2 hover:bg-accentColor/10 rounded-full transition-colors"
@@ -197,18 +221,22 @@ const FormCheckout = ({ appliedCoupon, setAppliedCoupon, subtotal }) => {
                       setManualCode(e.target.value.toUpperCase());
                       if (couponError) setCouponError("");
                     }}
-                    className="flex-1 bg-white/[0.02] border border-white/10 rounded-sm px-6 py-4 text-[0.7rem] tracking-[0.3em] uppercase text-white focus:border-accentColor/50 focus:outline-0 transition-all"
+                    className="flex-1 bg-white/80 border border-stone-300 rounded-sm px-6 py-4 text-[0.7rem] tracking-[0.3em] uppercase text-textColor focus:border-accentColor focus:outline-0 transition-all"
                   />
                   <button
                     type="button"
                     onClick={() => handleApplyCoupon(manualCode)}
                     disabled={!manualCode || validateCouponMutation.isPending}
-                    className="px-8 bg-white/5 border border-white/10 text-[0.6rem] uppercase tracking-[0.2em] font-black hover:bg-white/10 transition-all disabled:opacity-20"
+                    className="px-8 bg-stone-100 border border-stone-300 text-stone-600 text-[0.6rem] uppercase tracking-[0.2em] font-black hover:bg-stone-200 transition-all disabled:opacity-20"
                   >
-                    {validateCouponMutation.isPending ? "VALIDATING..." : "APPLY"}
+                    {validateCouponMutation.isPending
+                      ? "VALIDATING..."
+                      : "APPLY"}
                   </button>
                 </div>
-                {couponError && <p className={errorClasses + " mt-4"}>{couponError}</p>}
+                {couponError && (
+                  <p className={errorClasses + " mt-4"}>{couponError}</p>
+                )}
               </div>
 
               {/* Available Coupons */}
@@ -219,11 +247,15 @@ const FormCheckout = ({ appliedCoupon, setAppliedCoupon, subtotal }) => {
                       key={coupon._id}
                       type="button"
                       onClick={() => handleApplyCoupon(coupon.code)}
-                      className="group p-6 border border-white/5 bg-white/[0.02] hover:border-accentColor/30 hover:bg-accentColor/[0.02] transition-all text-left rounded-sm relative overflow-hidden"
+                      className="group p-6 border border-stone-200 bg-white/60 hover:border-accentColor/40 hover:bg-accentColor/[0.03] transition-all text-left rounded-sm relative overflow-hidden"
                     >
-                      <p className="text-[0.65rem] uppercase tracking-[0.3em] font-black text-stone-400 group-hover:text-accentColor transition-colors mb-2">{coupon.code}</p>
+                      <p className="text-[0.65rem] uppercase tracking-[0.3em] font-black text-stone-400 group-hover:text-accentColor transition-colors mb-2">
+                        {coupon.code}
+                      </p>
                       <p className="text-[0.5rem] uppercase tracking-widest text-stone-600">
-                        {coupon.discountType === "PERCENTAGE" ? `${coupon.discountValue}% SAVINGS` : `$${coupon.discountValue} REWARD`}
+                        {coupon.discountType === "PERCENTAGE"
+                          ? `${coupon.discountValue}% SAVINGS`
+                          : `$${coupon.discountValue} REWARD`}
                       </p>
                       <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-12 h-12 bg-accentColor/5 blur-xl group-hover:bg-accentColor/10 transition-colors" />
                     </button>
@@ -239,4 +271,3 @@ const FormCheckout = ({ appliedCoupon, setAppliedCoupon, subtotal }) => {
 };
 
 export default FormCheckout;
-

@@ -34,7 +34,8 @@ const Checkout = () => {
         : appliedCoupon.discountValue)
     : 0;
     
-  const totalInvestment = subtotal - discountAmount;
+  const deliveryCharge = 60;
+  const totalInvestment = subtotal - discountAmount + deliveryCharge;
 
   //form setup
   const methods = useForm({
@@ -49,45 +50,29 @@ const Checkout = () => {
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["user-profile"]);
+      queryClient.invalidateQueries({ queryKey: ["user-profile"], refetchType: "all" });
     },
     onError: (err) => {
       toast.error(err.response?.data?.message || "Failed to update profile details");
     }
   });
 
-  // Create order mutation
+  // Create order mutation (auto-initiates payment on backend)
   const createOrderMutation = useMutation({
     mutationFn: async (orderData) => {
-      // User requested POST /api/v1/orders
       const response = await axiosPrivate.post("/order", orderData);
       return response.data;
     },
-    onError: (error) => {
-      toast.error(error.response?.data?.message || "Failed to finalize order");
-    }
-  });
-
-  // Payment initiate mutation
-  const paymentInitiateMutation = useMutation({
-    mutationFn: async (paymentData) => {
-      // User requested POST /api/v1/payment/initiate
-      const response = await axiosPrivate.post("/payment/initiate", paymentData);
-      return response.data;
-    },
     onSuccess: (resData) => {
-      // Redirect user to SSLCommerz GatewayPageURL
-      if (resData?.data?.GatewayPageURL) {
-        window.location.href = resData.data.GatewayPageURL;
-      } else if (resData?.GatewayPageURL) {
-        // Just in case data is flat
-        window.location.href = resData.GatewayPageURL;
+      const gatewayUrl = resData?.data?.GatewayPageURL || resData?.GatewayPageURL;
+      if (gatewayUrl) {
+        window.location.href = gatewayUrl;
       } else {
         toast.error("Failed to retrieve payment gateway URL");
       }
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || "Failed to initiate payment");
+      toast.error(error.response?.data?.message || "Failed to finalize order");
     }
   });
 
@@ -97,7 +82,6 @@ const Checkout = () => {
       return;
     }
 
-    // Step 1: Update Profile (Optional: Update address if changed)
     updateProfileMutation.mutate({
       name: formData.fullName,
       phoneNumber: formData.phoneNumber,
@@ -106,30 +90,18 @@ const Checkout = () => {
       road: formData.road,
     }, {
       onSuccess: () => {
-        // Step 2: Create Order from cart (POST /api/v1/orders)
         const orderPayload = {};
         if (appliedCoupon?.code) {
           orderPayload.couponCode = appliedCoupon.code;
         }
 
-        createOrderMutation.mutate(orderPayload, {
-          onSuccess: (orderRes) => {
-            // Step 3: Payment Initiation (POST /api/v1/payment/initiate)
-            // Use orderId from the created order object
-            const orderId = orderRes.data?._id || orderRes.data?.id || orderRes._id || orderRes.id;
-            
-            if (orderId) {
-              paymentInitiateMutation.mutate({ orderId });
-            } else {
-              toast.error("Order created but ID not found");
-            }
-          }
-        });
+        createOrderMutation.mutate(orderPayload);
       }
     });
   };
 
-  const isProcessing = updateProfileMutation.isPending || createOrderMutation.isPending || paymentInitiateMutation.isPending;
+  const isCartEmpty = cartItems.length === 0;
+  const isProcessing = updateProfileMutation.isPending || createOrderMutation.isPending;
 
   return (
     <StatusChecker>
@@ -145,7 +117,7 @@ const Checkout = () => {
             </span>
             <RevealTitle
               phrases={["Complete Purchase"]}
-              phraseStyle="text-4xl md:text-6xl lg:text-7xl font-light tracking-tighter text-white leading-tight"
+              phraseStyle="text-4xl md:text-6xl lg:text-7xl font-light tracking-tighter text-textColor leading-tight"
             />
             <div className="h-[1px] w-12 bg-accentColor mt-8 opacity-50" />
           </header>
@@ -170,15 +142,16 @@ const Checkout = () => {
                     appliedCoupon={appliedCoupon} 
                     discountAmount={discountAmount}
                     totalInvestment={totalInvestment}
+                    deliveryCharge={deliveryCharge}
                   />
                   
                   <Button 
-                    className="mt-12 w-full h-16 group bg-accentColor rounded-sm hover:bg-accentColor/90 transition-all duration-300 shadow-xl border-0" 
+                    className="mt-12 w-full h-16 group bg-accentColor rounded-sm hover:bg-accentColor/90 transition-all duration-300 shadow-xl border-0 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-accentColor" 
                     type="submit"
-                    disabled={isProcessing}
+                    disabled={isProcessing || isCartEmpty}
                   >
-                    <Button.Border1 className="border-accentColor2/30 z-[1] group-hover:scale-x-105 transition-transform" />
-                    <Button.Border2 className="border-accentColor2/30 z-[2] group-hover:scale-x-105 transition-transform" />
+                    <Button.Border1 className="border-accentColor2/30 z-[1] group-hover:scale-x-105 transition-transform disabled:opacity-30" />
+                    <Button.Border2 className="border-accentColor2/30 z-[2] group-hover:scale-x-105 transition-transform disabled:opacity-30" />
                     <Button.Title className="font-black uppercase tracking-[0.3em] text-[0.75rem] text-bgColor">
                       {isProcessing ? "Processing Selection..." : "Place Final Order"}
                     </Button.Title>
@@ -187,7 +160,7 @@ const Checkout = () => {
                     </Button.Icon>
                   </Button>
 
-                  <p className="mt-6 text-[0.55rem] uppercase tracking-[0.2em] text-stone-600 text-center leading-loose">
+                  <p className="mt-6 text-[0.55rem] uppercase tracking-[0.2em] text-stone-500 text-center leading-loose">
                     By placing your order, you agree to our<br/>terms of artisanal service and privacy.
                   </p>
                 </div>
