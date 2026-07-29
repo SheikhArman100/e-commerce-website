@@ -1,7 +1,7 @@
 "use client";
 
 import AboutUsImage from "@/public/assets/aboutUsImage.jpg";
-import { Star, ArrowRight } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -17,31 +17,51 @@ const AboutUs = () => {
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accentColor/10 border border-accentColor/20 mb-6">
                 <Star className="w-3 h-3 text-accentColor fill-accentColor" />
-                <span className="text-accentColor text-[0.65rem] uppercase tracking-[0.3em] font-bold">The Artisanal Journey</span>
+                <span className="text-accentColor text-[0.65rem] uppercase tracking-[0.3em] font-bold">
+                  The Artisanal Journey
+                </span>
               </div>
 
               <h2 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 leading-[1.05]">
                 Crafting Joy, <br />
-                <span className="text-accentColor italic serif">One Layer</span> at a Time.
+                <span className="text-accentColor italic serif">
+                  One Layer
+                </span>{" "}
+                at a Time.
               </h2>
 
               <p className="text-lg md:text-xl text-stone-500 font-light leading-relaxed max-w-xl mb-10">
-                At <span className="text-textColor font-medium">Baking Tales</span>, we believe life's finest moments are handcrafted.
-                We meticulously source the world's most exquisite ingredients to compose scrumptious cakes and delicate cupcakes that tell a story of passion and pure indulgence.
+                At{" "}
+                <span className="text-textColor font-medium">Baking Tales</span>
+                , we believe life's finest moments are handcrafted. We
+                meticulously source the world's most exquisite ingredients to
+                compose scrumptious cakes and delicate cupcakes that tell a
+                story of passion and pure indulgence.
               </p>
 
               <div className="grid grid-cols-2 gap-8 mb-12">
                 <div>
-                  <p className="text-2xl font-bold text-textColor mb-1">Est. 2023</p>
-                  <p className="text-[10px] uppercase tracking-widest text-stone-500 font-bold">Artisanal Roots</p>
+                  <p className="text-2xl font-bold text-textColor mb-1">
+                    Est. 2023
+                  </p>
+                  <p className="text-[10px] uppercase tracking-widest text-stone-500 font-bold">
+                    Artisanal Roots
+                  </p>
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-accentColor mb-1">98%</p>
-                  <p className="text-[10px] uppercase tracking-widest text-stone-500 font-bold">Client Happiness</p>
+                  <p className="text-2xl font-bold text-accentColor mb-1">
+                    98%
+                  </p>
+                  <p className="text-[10px] uppercase tracking-widest text-stone-500 font-bold">
+                    Client Happiness
+                  </p>
                 </div>
               </div>
 
-              <Link href="/about" className="group flex items-center gap-4 text-textColor uppercase tracking-[0.3em] text-[0.7rem] font-black">
+              <Link
+                href="/about"
+                className="group flex items-center gap-4 text-textColor uppercase tracking-[0.3em] text-[0.7rem] font-black"
+              >
                 <span>Discover Our Story</span>
                 <div className="w-10 h-10 rounded-full border border-textColor/10 flex items-center justify-center group-hover:border-accentColor/40 group-hover:bg-accentColor/5">
                   <ArrowRight className="w-4 h-4 group-hover:text-accentColor" />
@@ -64,7 +84,8 @@ const AboutUs = () => {
 
               <div className="absolute bottom-8 left-8 right-8 p-6 bg-bgColor/80 backdrop-blur-xl border border-textColor/5 rounded-2xl shadow-xl">
                 <p className="text-sm font-light italic leading-relaxed text-textColor/90">
-                  "We don't just bake; we create edible memories designed to linger long after the last crumb is gone."
+                  "We don't just bake; we create edible memories designed to
+                  linger long after the last crumb is gone."
                 </p>
               </div>
             </div>

@@ -39,17 +39,20 @@ const Services = () => {
   const servicesData = [
     {
       title: "Artisanal Craft",
-      description: "Every delicacy is meticulously hand-crafted in our studio using traditional techniques.",
+      description:
+        "Every delicacy is meticulously hand-crafted in our studio using traditional techniques.",
       icon: "M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8 M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1 M2 21h20 M7 8v2 M12 8v2 M17 8v2 M7 4h.01 M12 4h.01 M17 4h.01",
     },
     {
       title: "Home Delivery",
-      description: "We ensure your delicate treats arrive in perfect condition through our specialized white-glove service.",
+      description:
+        "We ensure your delicate treats arrive in perfect condition through our specialized white-glove service.",
       icon: "M5 18H3c-.6 0-1-.4-1-1V7c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v11 M14 9h4l4 4v4c0 .6-.4 1-1 1h-2 M5 18a2 2 0 1 0 4 0a2 2 0 1 0 -4 0M5 18a2 2 0 1 0 4 0a2 2 0 1 0 -4 0 M15 18H9 M15 18a2 2 0 1 0 4 0a2 2 0 1 0 -4 0",
     },
     {
       title: "Gift of Joy",
-      description: "Elegantly packaged with custom notes and artisanal chocolate accents for those special moments.",
+      description:
+        "Elegantly packaged with custom notes and artisanal chocolate accents for those special moments.",
       icon: "M20 12L20 22L4 22L4 12 M2 7h20v5H2Z M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z",
     },
   ];

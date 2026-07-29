@@ -3,13 +3,7 @@ import Button from "@/Components/Button";
 import SectionTitle from "@/Components/SectionTitle";
 import image1 from "@/public/assets/homeImage1.jpg";
 import image2 from "@/public/assets/pexels-jonathan-borba-9816191.jpg";
-import {
-  ArrowRight,
-  Facebook,
-  Instagram,
-  Star,
-  Twitter,
-} from "lucide-react";
+import { ArrowRight, Facebook, Instagram, Star, Twitter } from "lucide-react";
 import Image from "next/image";
 import image3 from "../../public/assets/frank-zhang-53nLF9woXE0-unsplash.jpg";
 
@@ -19,11 +13,19 @@ const HomeContainer = ({ children }) => {
       <div className="relative min-h-screen w-full flex flex-col lg:flex-row bg-bgColor pt-24 md:pt-36 lg:pt-40">
         <div className="w-full lg:w-1/2 flex flex-col justify-center items-center lg:items-start text-center lg:text-left px-6 sm:px-10 md:px-16 pb-20 z-20">
           <div className="flex items-center justify-center lg:justify-start gap-x-2 mb-6">
-            <Star fill="#9B2242" stroke="none" className="h-4 w-4 md:h-5 md:w-5" />
+            <Star
+              fill="#9B2242"
+              stroke="none"
+              className="h-4 w-4 md:h-5 md:w-5"
+            />
             <span className="text-accentColor tracking-[0.3em] text-[10px] md:text-xs font-bold uppercase">
               Premium Bakery
             </span>
-            <Star fill="#9B2242" stroke="none" className="h-4 w-4 md:h-5 md:w-5" />
+            <Star
+              fill="#9B2242"
+              stroke="none"
+              className="h-4 w-4 md:h-5 md:w-5"
+            />
           </div>
 
           <h1 className="text-textColor text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-[1.05] mb-8 tracking-tight">
@@ -32,14 +34,21 @@ const HomeContainer = ({ children }) => {
           </h1>
 
           <p className="text-textColor/80 text-base md:text-lg lg:text-xl max-w-lg mb-10 leading-relaxed font-light mx-auto lg:mx-0">
-            Enjoy your indulgent afternoon tea in the comfort of your home with the most beautiful & scrumptious cakes, crafted from the finest ingredients.
+            Enjoy your indulgent afternoon tea in the comfort of your home with
+            the most beautiful & scrumptious cakes, crafted from the finest
+            ingredients.
           </p>
 
           <div className="flex justify-center lg:justify-start w-full">
-            <Button className="w-48 h-12 md:w-56 md:h-14 bg-accentColor rounded-sm hover:bg-accentColor/90 shadow-lg" href="/products">
+            <Button
+              className="w-48 h-12 md:w-56 md:h-14 bg-accentColor rounded-sm hover:bg-accentColor/90 shadow-lg"
+              href="/products"
+            >
               <Button.Border1 />
               <Button.Border2 />
-              <Button.Title className="text-xs md:text-base uppercase tracking-widest font-bold text-bgColor">Discover Shop</Button.Title>
+              <Button.Title className="text-xs md:text-base uppercase tracking-widest font-bold text-bgColor">
+                Discover Shop
+              </Button.Title>
               <Button.Icon>
                 <ArrowRight className="stroke-bgColor" />
               </Button.Icon>
@@ -89,9 +98,20 @@ const HomeContainer = ({ children }) => {
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 right-auto md:left-auto md:translate-x-0 md:bottom-12 md:right-12 lg:-left-24 lg:bottom-12 z-30 bg-accentColor2/80 backdrop-blur-3xl p-4 md:p-8 border border-white/20 rounded-3xl w-[90%] max-w-[240px] md:max-w-sm shadow-xl group overflow-hidden flex flex-col items-center md:items-start text-center md:text-left">
               <div className="flex flex-col md:flex-row items-center justify-between w-full mb-2 gap-1 md:gap-2">
                 <div className="flex items-center gap-x-2">
-                  <Star fill="#9B2242" stroke="none" className="h-3 w-3 md:hidden" />
-                  <SectionTitle title="New Arrival" className="!mb-0 scale-75 md:scale-100 origin-center md:origin-left !text-textColor" />
-                  <Star fill="#9B2242" stroke="none" className="h-3 w-3 md:hidden" />
+                  <Star
+                    fill="#9B2242"
+                    stroke="none"
+                    className="h-3 w-3 md:hidden"
+                  />
+                  <SectionTitle
+                    title="New Arrival"
+                    className="!mb-0 scale-75 md:scale-100 origin-center md:origin-left !text-textColor"
+                  />
+                  <Star
+                    fill="#9B2242"
+                    stroke="none"
+                    className="h-3 w-3 md:hidden"
+                  />
                 </div>
               </div>
 
@@ -102,15 +122,30 @@ const HomeContainer = ({ children }) => {
               <div className="flex flex-col md:flex-row items-center justify-between w-full gap-4 md:gap-6">
                 <div className="flex -space-x-3 justify-center">
                   {[image2, image3].map((img, i) => (
-                    <div key={i} className="w-9 h-9 md:w-16 md:h-16 rounded-lg md:rounded-xl border-2 border-bgColor overflow-hidden relative shadow-xl">
-                      <Image src={img} alt="item" fill className="object-cover" placeholder="blur" />
+                    <div
+                      key={i}
+                      className="w-9 h-9 md:w-16 md:h-16 rounded-lg md:rounded-xl border-2 border-bgColor overflow-hidden relative shadow-xl"
+                    >
+                      <Image
+                        src={img}
+                        alt="item"
+                        fill
+                        className="object-cover"
+                        placeholder="blur"
+                      />
                     </div>
                   ))}
                   <div className="w-9 h-9 md:w-16 md:h-16 rounded-lg md:rounded-xl border-2 border-bgColor bg-accentColor flex items-center justify-center text-bgColor font-black text-[10px] md:text-sm shadow-xl">
                     +5
                   </div>
-                  <a href="/products" className="w-9 h-9 md:w-12 md:h-12 flex items-center justify-center bg-textColor/10 rounded-full hover:bg-accentColor hover:text-bgColor shadow-sm border border-textColor/5 ml-4">
-                    <ArrowRight size={16} className="md:w-[22px] md:h-[22px] text-textColor" />
+                  <a
+                    href="/products"
+                    className="w-9 h-9 md:w-12 md:h-12 flex items-center justify-center bg-textColor/10 rounded-full hover:bg-accentColor hover:text-bgColor shadow-sm border border-textColor/5 ml-4"
+                  >
+                    <ArrowRight
+                      size={16}
+                      className="md:w-[22px] md:h-[22px] text-textColor"
+                    />
                   </a>
                 </div>
               </div>
@@ -119,9 +154,7 @@ const HomeContainer = ({ children }) => {
         </div>
       </div>
 
-      <div className="relative z-40 bg-bgColor mt-0">
-        {children}
-      </div>
+      <div className="relative z-40 bg-bgColor mt-0">{children}</div>
     </section>
   );
 };
