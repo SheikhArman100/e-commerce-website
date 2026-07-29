@@ -1,21 +1,12 @@
 "use client";
 import SectionTitle from "@/Components/SectionTitle";
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
 
-const ServiceCard = ({ icon: IconPath, title, description, isInView, index }) => {
+const ServiceCard = ({ icon: IconPath, title, description }) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.8, delay: index * 0.2 }}
-      className="group relative flex flex-col items-center p-8 bg-accentColor2/20 border border-textColor/10 rounded-2xl transition-all duration-500 hover:bg-accentColor2/30 hover:border-accentColor/30"
-    >
-      {/* Decorative Glow */}
-      <div className="absolute inset-0 bg-accentColor/0 group-hover:bg-accentColor/5 rounded-2xl blur-2xl transition-all duration-500 -z-10" />
-      
-      {/* Icon Wrapper */}
-      <div className="relative mb-8 p-6 rounded-full bg-bgColor border border-textColor/10 group-hover:border-accentColor/40 transition-colors duration-500 shadow-sm">
+    <div className="group relative flex flex-col items-center p-8 bg-accentColor2/20 border border-textColor/10 rounded-2xl">
+      <div className="absolute inset-0 bg-accentColor/0 group-hover:bg-accentColor/5 rounded-2xl blur-2xl -z-10" />
+
+      <div className="relative mb-8 p-6 rounded-full bg-bgColor border border-textColor/10 group-hover:border-accentColor/40 shadow-sm">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="48"
@@ -24,20 +15,14 @@ const ServiceCard = ({ icon: IconPath, title, description, isInView, index }) =>
           fill="transparent"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="h-12 w-12 lg:h-16 lg:w-16 stroke-accentColor transition-transform duration-500 group-hover:scale-110"
+          className="h-12 w-12 lg:h-16 lg:w-16 stroke-accentColor"
         >
-          <motion.path
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: isInView ? 1 : 0 }}
-            transition={{ duration: 3, ease: "easeInOut", delay: index * 0.2 }}
-            d={IconPath}
-          />
+          <path d={IconPath} />
         </svg>
       </div>
 
-      {/* Text Content */}
       <div className="flex flex-col items-center text-center space-y-4">
-        <h4 className="text-2xl font-semibold text-accentColor font2 tracking-wide leading-tight transition-colors duration-300">
+        <h4 className="text-2xl font-semibold text-accentColor font2 tracking-wide leading-tight">
           {title}
         </h4>
         <p className="text-stone-500 text-sm font-light leading-relaxed max-w-[240px]">
@@ -45,16 +30,12 @@ const ServiceCard = ({ icon: IconPath, title, description, isInView, index }) =>
         </p>
       </div>
 
-      {/* Bottom Accent */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-accentColor transition-all duration-500 group-hover:w-1/3" />
-    </motion.div>
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-accentColor group-hover:w-1/3" />
+    </div>
   );
 };
 
 const Services = () => {
-  const containerRef = useRef(null);
-  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
-
   const servicesData = [
     {
       title: "Artisanal Craft",
@@ -74,29 +55,20 @@ const Services = () => {
   ];
 
   return (
-    <section className="relative w-full pt-24 pb-12 px-6 md:px-12 lg:px-24  overflow-hidden bg-bgColor">
-      {/* Decorative Atmosphere */}
+    <section className="relative w-full pt-24 pb-12 px-6 md:px-12 lg:px-24 overflow-hidden bg-bgColor">
       <div className="absolute inset-0 pointer-events-none" />
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-full h-full bg-accentColor/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="relative z-10 flex flex-col items-center">
         <SectionTitle title="Our Commitment" />
-        
+
         <h3 className="text-3xl md:text-4xl lg:text-5xl text-accentColor font2 mt-4 mb-20 text-center max-w-2xl leading-tight">
           Excellence in Every Detail
         </h3>
 
-        <div 
-          ref={containerRef}
-          className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 max-w-[1400px]"
-        >
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 max-w-[1400px]">
           {servicesData.map((service, index) => (
-            <ServiceCard
-              key={index}
-              {...service}
-              isInView={isInView}
-              index={index}
-            />
+            <ServiceCard key={index} {...service} />
           ))}
         </div>
       </div>
