@@ -26,10 +26,10 @@ const navItems = [
     name: "Products",
     href: "/products",
   },
-  {
-    name: "Journals",
-    href: "/journals",
-  },
+  // {
+  //   name: "Journals",
+  //   href: "/journals",
+  // },
 ];
 
 const NavBar = () => {
@@ -93,12 +93,12 @@ const NavBar = () => {
         {/* Unauthenticated State: Show Icons */}
         {!user && !isPending && (
           <>
-            <Link href="/wishlist">
+            <Link href="/wishlist" title="Wishlist">
               <IconCircleBorder>
                 <Heart className="h-[1.2rem] aspect-square" />
               </IconCircleBorder>
             </Link>
-            <Link href="/order">
+            <Link href="/order" title="Orders">
               <IconCircleBorder>
                 <ShoppingBag className="h-[1.2rem] aspect-square" />
               </IconCircleBorder>
@@ -117,6 +117,7 @@ const NavBar = () => {
                 <span className="text-xs text-stone-500 line-clamp-1">{user.email}</span>
               </div>
               <button 
+                title="Account"
                 className="h-10 w-10 rounded-full border border-accentColor/30 overflow-hidden flex items-center justify-center bg-bgColor hover:border-accentColor transition-all z-50 relative"
               >
                 {user?.detail?.image?.path ? (

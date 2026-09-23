@@ -1,11 +1,11 @@
 import Categories from "@/app/components/Categories";
 import Header from "@/Components/header/Header.js";
 import AboutUs from "./components/AboutUs";
-import FeaturedItem from "./components/FeaturedItem";
 import Footer from "./components/Footer.js";
 import HomeContainer from "./components/HomeContainer";
 import HomeSection from "./components/HomeSection.js";
 import Journal from "./components/Journal";
+import ProductSection from "./components/ProductSection";
 import Services from "./components/Services";
 
 export const metadata = {
@@ -16,25 +16,20 @@ export const metadata = {
 
 const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-async function getAllProducts() {
-  try {
-    const response = await fetch(`${backendURL}/product`, { cache: 'no-store' });
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching all products:", error);
-    return { data: [] };
-  }
-}
-
+/**
+ * Public feed of products flagged `isFeatured` (and still active).
+ * GET /product/featured reuses the /product payload, so every size already
+ * carries campaign-aware `originalPrice` / `salesPrice`.
+ */
 async function getFeaturedProducts() {
   try {
-    const response = await fetch(`${backendURL}/product?limit=6`, { cache: 'no-store' });
+    const response = await fetch(`${backendURL}/product/featured?limit=6`, { cache: 'no-store' });
     const data = await response.json();
-    return data;
+    // The backend's sendResponse wrapper: { success, statusCode, message, meta, data }
+    return data?.data ?? [];
   } catch (error) {
     console.error("Error fetching featured products:", error);
-    return { data: [] };
+    return [];
   }
 }
 
@@ -68,31 +63,52 @@ async function getCategories() {
 }
 
 export default async function Home() {
-  const [featuredData, categoriesData, activeCampaign] = await Promise.all([
+  const [featuredProducts, categoriesData, activeCampaign] = await Promise.all([
     getFeaturedProducts(),
     getCategories(),
     getActiveCampaign(),
   ]);
 
-  // The /campaigns/active response already includes the products array
-  // with campaign pricing applied, so no second round-trip is needed.
+  // GET /campaign/active already returns the campaign's products with campaign
+  // pricing applied, so no second round-trip is needed.
   const campaignProducts = activeCampaign?.products ?? [];
-  const featuredProducts = featuredData?.data || [];
   const categories = categoriesData?.data || [];
 
   return (
     <main className="">
       <HomeSection>
         <Header />
-        <HomeContainer>
-          <FeaturedItem
+        <HomeContainer activeCampaign={activeCampaign}>
+          {/* Section 1 — products flagged `isFeatured` (GET /product/featured) */}
+          <ProductSection
+            eyebrow="Artisanal Selection"
+            title="Featured"
             products={featuredProducts}
-            campaign={activeCampaign}
-            campaignProducts={campaignProducts}
+            href="/products"
           />
+
+          {/* Section 2 — the brand story, sitting between the curated
+              products above and the category browser below. */}
           <AboutUs />
+
+          {/* Section 3 — category browser (interactive preview card) */}
           <Categories categories={categories} />
-          <Journal />
+
+          {/* Section 4 — the products of the currently running campaign
+              (GET /campaign/active). Rendered separately from the featured
+              feed, and hidden entirely when no campaign is live. */}
+          {campaignProducts.length > 0 && (
+            <ProductSection
+              id="live-campaign"
+              eyebrow="Live Campaign"
+              title={activeCampaign?.title}
+              products={campaignProducts}
+              href="/products"
+            />
+          )}
+
+          {/* Section 5 — editorial journal teasers */}
+          {/* <Journal /> */}
         </HomeContainer>
           <Services />
           <Footer />

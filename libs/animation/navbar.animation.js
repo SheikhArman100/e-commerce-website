@@ -5,7 +5,7 @@ export const navbarItem = {
   animate: {
     scale: 1,
     transition: {
-      delay: 1.5,
+      delay: 0.5,
       duration: 0.3,
       ease: "linear",
     },

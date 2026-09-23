@@ -35,10 +35,10 @@ const navItems = [
     name: "Products",
     href: "/products",
   },
-  {
-    name: "Journals",
-    href: "/journals",
-  }
+  // {
+  //   name: "Journals",
+  //   href: "/journals",
+  // }
 ]
 
 const MobileNav = () => {
@@ -92,6 +92,7 @@ const MobileNav = () => {
         <div className="flex items-center justify-center">
           <motion.button
             onClick={() => setIsActive(!isActive)}
+            title={isActive ? "Close menu" : "Menu"}
             className="z-50"
             variants={navbarItem}
             initial="initial"
@@ -109,7 +110,7 @@ const MobileNav = () => {
           {/* Unauthenticated State: Show Icons */}
           {!user && !isPending && (
             <>
-              <Link href="/wishlist">
+              <Link href="/wishlist" title="Wishlist">
                 <IconCircleBorder className="h-8 w-8">
                   <Heart className="h-4 w-4 stroke-textColor/70" />
                 </IconCircleBorder>
@@ -126,6 +127,7 @@ const MobileNav = () => {
                     <span className="text-xs font-medium text-textColor line-clamp-1 max-w-[100px]">{user.name}</span>
                   </div>
                   <button 
+                    title="Account"
                     className="h-8 w-8 rounded-full border border-accentColor/30 overflow-hidden flex items-center justify-center bg-bgColor hover:border-accentColor transition-all z-50 relative"
                   >
                     {user?.detail?.image?.path ? (
@@ -262,13 +264,14 @@ const MobileNav = () => {
 
                 <div className="flex justify-center gap-x-4">
                   {[
-                    { Icon: Facebook, link: "#" },
-                    { Icon: Instagram, link: "#" },
-                    { Icon: Twitter, link: "#" },
+                    { Icon: Facebook, link: "#", name: "Facebook" },
+                    { Icon: Instagram, link: "#", name: "Instagram" },
+                    { Icon: Twitter, link: "#", name: "Twitter" },
                   ].map((social, idx) => (
                     <FramerMagnetic key={idx}>
                       <a
                         href={social.link}
+                        title={social.name}
                         className="w-9 h-9 flex items-center justify-center border border-textColor/5 bg-textColor/5 hover:border-accentColor hover:bg-accentColor transition-all duration-500 text-textColor/70 hover:text-bgColor group"
                       >
                         <social.Icon

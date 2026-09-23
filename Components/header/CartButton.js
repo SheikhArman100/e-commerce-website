@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const CartButton = () => {
   return (
-    <Link href="/cart" className="relative p-2   cursor-pointer group ">
+    <Link href="/cart" title="Cart" className="relative p-2   cursor-pointer group ">
       <motion.div variants={navbarItem} initial="initial" animate="animate">
         <ShoppingCart className=" h-6 w-6 text-accentColor  " />
       </motion.div>
