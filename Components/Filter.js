@@ -1,6 +1,4 @@
 "use client";
-import useFlavors from "@/hooks/useFlavors";
-import useSizes from "@/hooks/useSizes";
 import { Check } from "lucide-react";
 import { useEffect, useState } from "react";
 import PriceSlider from "./PriceSlider";
@@ -10,9 +8,9 @@ import PriceSlider from "./PriceSlider";
 const SLIDER_MIN = 0;
 const SLIDER_MAX = 500;
 
-const Filter = ({ filters, onFilterChange, onClearFilters }) => {
-  const { data: flavorsData } = useFlavors();
-  const { data: sizesData } = useSizes();
+// `flavors` / `sizes` arrive server-side from the page as props (display-safe
+// GET /flavor/public + GET /size/public), so this panel needs no fetching.
+const Filter = ({ filters, flavors = [], sizes = [], onFilterChange, onClearFilters }) => {
 
   // Local draft state — only pushed to the parent when the user clicks "Apply"
   // We always keep numeric minPrice/maxPrice (never collapse to null) so the
@@ -120,7 +118,7 @@ const Filter = ({ filters, onFilterChange, onClearFilters }) => {
           Flavor
         </h3>
         <div className="flex flex-wrap gap-2">
-          {flavorsData?.data?.map((flavor) => (
+          {flavors.map((flavor) => (
             <button
               key={flavor.id}
               onClick={() => handleSelectFilter('flavorName', flavor.name)}
@@ -142,7 +140,7 @@ const Filter = ({ filters, onFilterChange, onClearFilters }) => {
           Size
         </h3>
         <div className="flex flex-wrap gap-2">
-          {sizesData?.data?.map((size) => (
+          {sizes.map((size) => (
             <button
               key={size.id}
               onClick={() => handleSelectFilter('sizeName', size.name)}

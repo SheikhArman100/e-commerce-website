@@ -1,6 +1,4 @@
 "use client";
-import useFlavors from '@/hooks/useFlavors';
-import useSizes from '@/hooks/useSizes';
 import { Check, SlidersHorizontal, Star, X } from "lucide-react";
 import { useEffect, useState } from 'react';
 
@@ -11,9 +9,9 @@ import PriceSlider from './PriceSlider';
 const SLIDER_MIN = 0;
 const SLIDER_MAX = 500;
 
-const FilterMobile = ({ isOpen, onClose, filters, onFilterChange, onClearFilters }) => {
-  const { data: flavorsData } = useFlavors();
-  const { data: sizesData } = useSizes();
+// `flavors` / `sizes` arrive server-side from the page as props (display-safe
+// GET /flavor/public + GET /size/public), so this drawer needs no fetching.
+const FilterMobile = ({ isOpen, onClose, filters, flavors = [], sizes = [], onFilterChange, onClearFilters }) => {
 
   // Local draft state — only pushed to the parent when the user clicks "Apply"
   // We always keep numeric minPrice/maxPrice (never collapse to null) so the
@@ -152,7 +150,7 @@ const FilterMobile = ({ isOpen, onClose, filters, onFilterChange, onClearFilters
               Flavor
             </h3>
             <div className="pl-5 flex flex-wrap gap-2">
-              {flavorsData?.data?.map((flavor) => (
+              {flavors.map((flavor) => (
                 <button
                   key={flavor.id}
                   onClick={() => handleSelectFilter('flavorName', flavor.name)}
@@ -175,7 +173,7 @@ const FilterMobile = ({ isOpen, onClose, filters, onFilterChange, onClearFilters
               Size
             </h3>
             <div className="pl-5 flex flex-wrap gap-2">
-              {sizesData?.data?.map((size) => (
+              {sizes.map((size) => (
                 <button
                   key={size.id}
                   onClick={() => handleSelectFilter('sizeName', size.name)}
