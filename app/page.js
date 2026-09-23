@@ -52,28 +52,41 @@ async function getActiveCampaign() {
   }
 }
 
-async function getCategories() {
+/**
+ * Public storefront category feed — GET /category/public (no auth).
+ *
+ * Locked server-side to ACTIVE categories in the admin's display order, and
+ * every category arrives with ONE `previewProduct` (flavors, images and
+ * campaign-aware prices already applied). That makes this the section's only
+ * request: the names, the active-product counts and the default preview card
+ * all render inside the HTML for crawlers, and switching category later costs
+ * no network round trip.
+ *
+ * The payload is also display-safe: no audit columns and no creator/updater
+ * user rows inside this page's HTML.
+ */
+async function getPublicCategories() {
   try {
-    const response = await fetch(`${backendURL}/category?limit=3`, { cache: 'no-store' });
+    const response = await fetch(`${backendURL}/category/public?limit=3`, { cache: 'no-store' });
     const data = await response.json();
-    return data;
+    // The backend's sendResponse wrapper: { success, statusCode, message, meta, data }
+    return data?.data ?? [];
   } catch (error) {
     console.error("Error fetching categories:", error);
-    return { data: [] };
+    return [];
   }
 }
 
 export default async function Home() {
-  const [featuredProducts, categoriesData, activeCampaign] = await Promise.all([
+  const [featuredProducts, categories, activeCampaign] = await Promise.all([
     getFeaturedProducts(),
-    getCategories(),
+    getPublicCategories(),
     getActiveCampaign(),
   ]);
 
   // GET /campaign/active already returns the campaign's products with campaign
   // pricing applied, so no second round-trip is needed.
   const campaignProducts = activeCampaign?.products ?? [];
-  const categories = categoriesData?.data || [];
 
   return (
     <main className="">
@@ -92,7 +105,9 @@ export default async function Home() {
               products above and the category browser below. */}
           <AboutUs />
 
-          {/* Section 3 — category browser (interactive preview card) */}
+          {/* Section 3 — category browser. Fetched server-side above with the
+              preview products inlined by the API, so the section needs no
+              client-side request at all (server rendering = SEO). */}
           <Categories categories={categories} />
 
           {/* Section 4 — the products of the currently running campaign
