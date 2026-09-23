@@ -148,13 +148,13 @@ const About = () => {
             </h3>
             
             <div className="flex flex-col items-center gap-10">
-              <div className="flex -space-x-4">
+              {/* <div className="flex -space-x-4">
                 {[1, 2, 3].map((i) => (
                   <div key={i} className="w-16 h-16 rounded-full border-4 border-bgColor bg-accentColor2 flex items-center justify-center overflow-hidden hover:z-20 hover:scale-110 transition-transform shadow-md">
                      <Image src={AboutUsImage} alt="Founder" className="w-full h-full object-cover grayscale opacity-80" />
                   </div>
                 ))}
-              </div>
+              </div> */}
               <div className="space-y-2">
                 <p className="text-sm font-bold text-textColor/90 uppercase tracking-[0.4em]">Handcrafted Excellence</p>
                 <p className="text-[10px] text-stone-500 font-black uppercase tracking-widest">Baking Tales Boutique — Passion in every crumb</p>
