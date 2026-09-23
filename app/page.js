@@ -1,3 +1,4 @@
+import CampaignSection from "./components/CampaignSection";
 import Categories from "@/app/components/Categories";
 import Header from "@/Components/header/Header.js";
 import AboutUs from "./components/AboutUs";
@@ -95,16 +96,11 @@ export default async function Home() {
           <Categories categories={categories} />
 
           {/* Section 4 — the products of the currently running campaign
-              (GET /campaign/active). Rendered separately from the featured
-              feed, and hidden entirely when no campaign is live. */}
+              (GET /campaign/active), rendered by its own dedicated section:
+              campaign banner, discount, live countdown + the priced grid.
+              Hidden entirely when no campaign is live. */}
           {campaignProducts.length > 0 && (
-            <ProductSection
-              id="live-campaign"
-              eyebrow="Live Campaign"
-              title={activeCampaign?.title}
-              products={campaignProducts}
-              href="/products"
-            />
+            <CampaignSection campaign={activeCampaign} />
           )}
 
           {/* Section 5 — editorial journal teasers */}

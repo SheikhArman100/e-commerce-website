@@ -1,63 +1,16 @@
 import Button from "@/Components/Button";
 import Card from "@/Components/Card";
+import { resolveProductOffer } from "@/libs/productOffer";
 import { ArrowRight, Star } from "lucide-react";
 
 /**
- * Normalises one feed entry into everything a <Card /> needs, no matter which
- * public endpoint it came from:
+ * Storefront product grid used by the home page's curated feed (Featured
+ * products). Purely presentational — the data is fetched by the server
+ * component that renders it.
  *
- *   • GET /product & GET /product/featured → the product itself; every size
- *     already carries campaign-aware `originalPrice` / `salesPrice`.
- *   • GET /campaign/active → `{ ...campaignProduct, product }` — the campaign
- *     wrapper is unwrapped here (its `customDiscountPercentage` is already
- *     baked into the product's size prices by the backend).
- *
- * Because `originalPrice` is the base price and `salesPrice` the discounted
- * one, a size is only "on sale" when `salesPrice < originalPrice` — that keeps
- * the struck-through price off cards that have no discount at all.
- */
-const resolveOffer = (entry) => {
-  const item = entry?.product ?? entry;
-  if (!item) return null;
-
-  // ─── Pricing: cheapest size wins ("from ৳x") ─────────────────────────────
-  const offers = (item.flavors || [])
-    .flatMap((flavor) =>
-      (flavor.sizes || []).map((size) => {
-        const original = Number(size.originalPrice ?? size.price);
-        const sales = Number(size.salesPrice ?? original);
-        return { original, sales };
-      })
-    )
-    .filter(({ original }) => Number.isFinite(original));
-
-  const cheapest = offers.reduce(
-    (min, curr) => (curr.sales < min.sales ? curr : min),
-    offers[0]
-  );
-
-  const onSale = Boolean(cheapest) && cheapest.sales < cheapest.original;
-
-  return {
-    item,
-    price: cheapest ? cheapest.original : 0,
-    salesPrice: onSale ? cheapest.sales : null,
-    discountPercentage: onSale
-      ? Math.round((1 - cheapest.sales / cheapest.original) * 100)
-      : 0,
-    mainImagePath: (item.flavors || []).flatMap((f) => f.images || [])[0]?.path,
-    flavorColors: [
-      ...new Set((item.flavors || []).map((f) => f.flavor?.color).filter(Boolean)),
-    ],
-    categoryImagePath: item.category?.image?.path,
-    categoryName: item.category?.name?.toLowerCase(),
-  };
-};
-
-/**
- * Storefront product grid used by the home page sections (Featured products
- * and, separately, the live campaign's products). Purely presentational — the
- * data is fetched by the server component that renders it.
+ * Pricing/variant normalisation lives in `@/libs/productOffer`, shared with the
+ * campaign grid so both price a card identically. Live campaigns render through
+ * <CampaignSection /> instead of this component.
  */
 const ProductSection = ({
   id,
@@ -68,7 +21,7 @@ const ProductSection = ({
   emptyText = "No products found",
 }) => {
   const fileBase = process.env.NEXT_PUBLIC_FILE_URL;
-  const items = (products || []).map(resolveOffer).filter(Boolean);
+  const items = (products || []).map(resolveProductOffer).filter(Boolean);
 
   return (
     <section
