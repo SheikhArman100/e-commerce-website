@@ -74,7 +74,7 @@ const ProductClient = ({ product, similarProducts }) => {
           {/* Pillar 1: Immersive Gallery */}
           <div className="w-full lg:w-1/2 xl:w-[55%]">
             <motion.div variants={itemVariants} className="relative group">
-              <div className="relative aspect-[4/5] sm:aspect-square lg:aspect-[4/5] xl:aspect-square max-h-[750px] rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden bg-white/50 border border-textColor/10 shadow-2xl mx-auto">
+              <div className="relative aspect-[4/5] sm:aspect-square lg:aspect-[4/5] xl:aspect-square max-h-[750px] rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden bg-white/50 border border-textColor/10  mx-auto">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={mainImagePath}

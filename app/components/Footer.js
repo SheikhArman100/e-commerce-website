@@ -40,9 +40,9 @@ const Footer = () => {
             <li>
               <Link href="/about" className="text-stone-500 hover:text-accentColor text-sm transition-colors duration-300">Our Story</Link>
             </li>
-            <li>
+            {/* <li>
               <Link href="/journals" className="text-stone-500 hover:text-accentColor text-sm transition-colors duration-300">Journal</Link>
-            </li>
+            </li> */}
           </ul>
         </div>
 
@@ -52,15 +52,15 @@ const Footer = () => {
           <ul className="space-y-4">
             <li className="flex flex-col md:flex-row items-center md:items-start gap-x-3 text-stone-500 text-sm">
               <MapPin className="w-4 h-4 md:mt-0.5 text-accentColor mb-2 md:mb-0" />
-              <span>123 Baker Street, Artisanal District, BT 4567</span>
+              <span>21, Syed hasan ali lane, Islampur, Dhaka</span>
             </li>
             <li className="flex flex-col md:flex-row items-center md:items-center gap-x-3 text-stone-500 text-sm">
               <Phone className="w-4 h-4 text-accentColor mb-2 md:mb-0" />
-              <span>+1 (234) 567-890</span>
+              <span>(+880) 1892555458</span>
             </li>
             <li className="flex flex-col md:flex-row items-center md:items-center gap-x-3 text-stone-500 text-sm">
               <Mail className="w-4 h-4 text-accentColor mb-2 md:mb-0" />
-              <span>hello@bakingtales.com</span>
+              <span>sheikharman100@gmail.com</span>
             </li>
           </ul>
         </div>
