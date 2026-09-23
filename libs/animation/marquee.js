@@ -30,20 +30,11 @@ export const marqueeAD={
   },
 
 }
-export const marqueeText = {
-  animate: {
-    x: "-100%",
-    transition: {
-      x: {
-        type: 'tween',
-        repeat: Infinity,
-        repeatType: "loop",
-        duration: 4,
-        ease: "linear",
-      },
-    },
-  },
-};
+// NOTE: the per-item "marqueeText" variant was removed. Animating each item by
+// -100% of its OWN width only scrolls seamlessly when every item has identical
+// text/width; with different-length coupon messages the longer items slid
+// faster and overlapped the shorter ones. The row is now animated as a whole
+// inside Components/header/Marquee.js.
 
 
 
