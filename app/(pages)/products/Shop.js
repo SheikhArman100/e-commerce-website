@@ -221,7 +221,13 @@ const Shop = ({
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4  gap-6 sm:gap-8 md:gap-12 w-full max-w-6xl  place-items-center mx-auto  ">
                 {products.map((product, index) => {
                   const allFlavorImages = product.flavors?.flatMap(f => f.images) || [];
-                  const flavorColors = [...new Set(product.flavors?.map(f => f.flavor?.color).filter(Boolean))];
+                  const flavorEntries = [
+                    ...new Map(
+                      (product.flavors || [])
+                        .map((f) => [f.flavor?.color, f.flavor?.name])
+                        .filter(([color]) => Boolean(color))
+                    ).entries(),
+                  ].map(([color, name]) => ({ color, name }));
                  
                    const mainImagePath =allFlavorImages[0]?.path;
                    const allPrices = product.flavors?.flatMap(f => f.sizes?.map(s => ({
@@ -248,9 +254,10 @@ const Shop = ({
                        <Card.CardContainer>
                          <Card.CategoryIcon
                            category={product.category?.name?.toLowerCase()}
+                          categoryLabel={product.category?.name}
                            categoryImage={categoryImagePath ? `${fileBase}/${categoryImagePath}` : null}
                          />
-                         <Card.FlavorColors colors={flavorColors} />
+                         <Card.FlavorColors colors={flavorEntries} />
                          <Card.BgRemoveImage
                            bgRemoveImage={mainImagePath ? `${fileBase}/${mainImagePath}` : null}
                          />

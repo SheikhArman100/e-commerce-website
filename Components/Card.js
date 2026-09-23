@@ -22,29 +22,62 @@ const CardContainer=({className,children})=>{
         </div>
     )
 }
-const CategoryIcon=({className,category, categoryImage})=>{
-    return(
-        <div className={twMerge("sm:h-10 sm:w-10 h-8 w-8 border p-2 border-textColor/20 border-dotted rounded-full flex items-center justify-center transition-all overflow-hidden bg-bgColor",className)}>
-            {categoryImage ? (
-                <Image src={categoryImage} alt="category image" width={40} height={40} className="h-full w-full object-contain" />
-            ) : (
-                category==="cupcake"?<Image src={cupcakeIcon} alt="cupcake category icon" className="h-full w-full"/>:category==="jarcake"?<Image src={jarcakeIcon} alt="category icon" className="h-full w-full" />:<Image src={cakeIcon} alt="category icon" className="h-full w-full" />
-            )}
-        </div>
-    )
-
-}
-const FlavorColors = ({ className, colors }) => {
+const CategoryIcon = ({ className, category, categoryImage, categoryLabel, title }) => {
+  const label = title ?? categoryLabel ?? category;
+  return (
+    <div
+      title={label}
+      aria-label={label}
+      className={twMerge("group/category relative sm:h-10 sm:w-10 h-8 w-8 border p-2 border-textColor/20 border-dotted rounded-full flex items-center justify-center transition-all overflow-visible bg-bgColor", className)}
+    >
+      {categoryImage ? (
+        <Image src={categoryImage} alt="category image" width={40} height={40} className="h-full w-full object-contain" />
+      ) : (
+        category === "cupcake" ? <Image src={cupcakeIcon} alt="cupcake category icon" className="h-full w-full" /> : category === "jarcake" ? <Image src={jarcakeIcon} alt="category icon" className="h-full w-full" /> : <Image src={cakeIcon} alt="category icon" className="h-full w-full" />
+      )}
+      {/* {label && (
+        <span className="pointer-events-none absolute -bottom-7 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-sm bg-textColor px-2 py-0.5 text-[10px] font-semibold capitalize text-bgColor opacity-0 shadow-md transition-opacity duration-200 group-hover/category:opacity-100">
+          {label}
+        </span>
+      )} */}
+    </div>
+  );
+};
+const FlavorColors = ({ className, colors, flavors, flavorNames, names }) => {
+  const nameList =
+    flavorNames ?? names ?? (Array.isArray(flavors) ? flavors.map((f) => f?.name) : undefined);
+  const entries = (colors || []).map((entry, i) => {
+    if (entry && typeof entry === "object") {
+      return {
+        color: entry.color ?? entry.hex ?? entry.value,
+        name: entry.name ?? entry.label ?? entry.flavor ?? nameList?.[i],
+      };
+    }
+    return {
+      color: entry,
+      name: nameList?.[i] ?? (Array.isArray(flavors) ? flavors[i]?.name : undefined),
+    };
+  });
   return (
     <div className={twMerge("flex gap-x-1 transition-all", className)}>
-      {colors?.map((color, i) => (
-        <div
-          key={i}
-          className="sm:w-3 sm:h-3 w-2 h-2 rounded-full border border-textColor/20"
-          style={{ backgroundColor: color }}
-          title={color}
-        />
-      ))}
+      {entries.map((entry, i) => {
+        const label = entry.name ?? entry.color;
+        return (
+          <div
+            key={i}
+            title={label}
+            aria-label={label}
+            className="group/flavor relative sm:w-3 sm:h-3 w-2 h-2 rounded-full border border-textColor/20"
+            style={{ backgroundColor: entry.color }}
+          >
+            {/* {entry.name && (
+              <span className="pointer-events-none absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-sm bg-textColor px-1.5 py-px text-[10px] font-semibold capitalize text-bgColor opacity-0 shadow-md transition-opacity duration-200 group-hover/flavor:opacity-100">
+                {entry.name}
+              </span>
+            )} */}
+          </div>
+        );
+      })}
     </div>
   );
 };

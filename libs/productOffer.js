@@ -55,7 +55,11 @@ export const resolveProductOffer = (entry) => {
     flavorColors: [
       ...new Set((item.flavors || []).map((f) => f.flavor?.color).filter(Boolean)),
     ],
+    flavorNames: [
+      ...new Set((item.flavors || []).map((f) => f.flavor?.name).filter(Boolean)),
+    ],
     categoryImagePath: item.category?.image?.path,
+    categoryLabel: item.category?.name,
     categoryName: item.category?.name?.toLowerCase(),
   };
 };

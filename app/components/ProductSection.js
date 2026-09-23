@@ -66,11 +66,12 @@ const ProductSection = ({
                   )}
                   <Card.CategoryIcon
                     category={offer.categoryName}
+                    categoryLabel={offer.categoryLabel}
                     categoryImage={
                       offer.categoryImagePath ? `${fileBase}/${offer.categoryImagePath}` : null
                     }
                   />
-                  <Card.FlavorColors colors={offer.flavorColors} />
+                  <Card.FlavorColors colors={offer.flavorColors} flavorNames={offer.flavorNames} />
                   {/* A missing image must stay `null` so <Card.BgRemoveImage />
                       shows its "Gallery Pending" placeholder instead of
                       requesting `${fileBase}/undefined`. */}
