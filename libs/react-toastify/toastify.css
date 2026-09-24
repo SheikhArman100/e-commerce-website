@@ -1,0 +1,140 @@
+/* ==========================================================================
+   React-Toastify theme — Baking Tales design system
+   --------------------------------------------------------------------------
+   Imported by libs/react-toastify/ToastifyComponent.js (after the library css).
+
+   Colours come from the app tokens, so changing the palette in
+   app/globals.css / tailwind.config.js automatically restyles the toasts:
+     cream      hsl(var(--background))  #FFFBF2  bg-bgColor
+     chocolate  hsl(var(--foreground))  #5D4037  text-textColor
+     ruby       hsl(var(--primary))     #9B2242  accentColor
+     pale pink  hsl(var(--secondary))   #F4C2C2  accentColor2
+   ========================================================================== */
+
+/* The library declares these on :root, we re-declare them on the container
+   element (and prefix selectors with `body`) so our values always win, no
+   matter which stylesheet the bundler emits first. */
+body .Toastify__toast-container {
+  --toastify-toast-width: 22rem;
+  --toastify-toast-min-height: 3.25rem;
+  --toastify-toast-max-height: 40rem;
+  --toastify-font-family: inherit; /* Poppins / Roboto from layout.js */
+  --toastify-z-index: 9999;
+
+  /* card */
+  --toastify-color-light: hsl(var(--background));
+  --toastify-text-color-light: hsl(var(--foreground));
+  --toastify-color-dark: #3e2723; /* espresso, if theme="dark" is ever used */
+  --toastify-text-color-dark: #fffbf2;
+
+  /* icons */
+  --toastify-color-info: hsl(var(--foreground));
+  --toastify-icon-color-info: hsl(var(--foreground));
+  --toastify-color-success: hsl(var(--primary));
+  --toastify-icon-color-success: hsl(var(--primary));
+  --toastify-color-warning: #c08a2e; /* caramel */
+  --toastify-icon-color-warning: #c08a2e;
+  --toastify-color-error: hsl(var(--destructive));
+  --toastify-icon-color-error: hsl(var(--destructive));
+
+  /* progress bar */
+  --toastify-color-progress-light: linear-gradient(
+    90deg,
+    hsl(var(--primary)),
+    hsl(var(--secondary))
+  );
+  --toastify-color-progress-dark: #f4c2c2;
+  --toastify-color-progress-info: hsl(var(--foreground));
+  --toastify-color-progress-success: hsl(var(--primary));
+  --toastify-color-progress-warning: #c08a2e;
+  --toastify-color-progress-error: hsl(var(--destructive));
+
+  /* loading spinner */
+  --toastify-spinner-color: hsl(var(--primary));
+  --toastify-spinner-color-empty-area: hsl(var(--secondary));
+
+  padding: 0.5rem;
+  color: hsl(var(--foreground));
+}
+
+/* ---------------------------------------------------------------- the card */
+body .Toastify__toast-container .Toastify__toast {
+  padding: 0.5rem;
+  border: 1px solid hsl(var(--border));
+  border-left: 3px solid hsl(var(--secondary));
+  border-radius: var(--radius);
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: inherit;
+  box-shadow: 0 0.75rem 1.5rem -0.75rem rgba(93, 64, 55, 0.35),
+    0 0 0 1px rgba(255, 251, 242, 0.6);
+}
+
+/* left edge tells the toast type apart at a glance */
+body .Toastify__toast-container .Toastify__toast--info {
+  border-left-color: hsl(var(--foreground));
+}
+body .Toastify__toast-container .Toastify__toast--success {
+  border-left-color: hsl(var(--primary));
+}
+body .Toastify__toast-container .Toastify__toast--warning {
+  border-left-color: #c08a2e;
+}
+body .Toastify__toast-container .Toastify__toast--error {
+  border-left-color: hsl(var(--destructive));
+}
+
+/* ---------------------------------------------------------------- content */
+body .Toastify__toast-container .Toastify__toast-body {
+  padding: 0.25rem 0.375rem 0.35rem;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+body .Toastify__toast-container .Toastify__toast-icon {
+  width: 1.125rem;
+  margin-inline-end: 0.625rem;
+}
+
+/* ----------------------------------------------------------- close button */
+body .Toastify__toast-container .Toastify__close-button {
+  color: hsl(var(--foreground));
+  opacity: 0.5;
+  padding: 0.125rem;
+  transition: 0.3s ease;
+}
+body .Toastify__toast-container .Toastify__close-button:hover,
+body .Toastify__toast-container .Toastify__close-button:focus {
+  color: hsl(var(--primary));
+  opacity: 1;
+}
+
+/* ----------------------------------------------------------- progress bar */
+body .Toastify__toast-container .Toastify__progress-bar {
+  height: 3px;
+  opacity: 0.85;
+}
+
+/* ------------------------------------------------------------ loading dots */
+body .Toastify__toast-container .Toastify__spinner {
+  width: 1.125rem;
+  height: 1.125rem;
+  border-width: 2px;
+  border-radius: 100%;
+}
+
+/* --------------------------------------------------------------- mobile --- */
+@media only screen and (max-width: 480px) {
+  body .Toastify__toast-container {
+    padding: 0.5rem;
+  }
+  body .Toastify__toast-container--top-left,
+  body .Toastify__toast-container--top-center,
+  body .Toastify__toast-container--top-right {
+    top: 0.25rem;
+  }
+  body .Toastify__toast-container .Toastify__toast {
+    border-radius: var(--radius);
+    margin-bottom: 0.5rem;
+  }
+}

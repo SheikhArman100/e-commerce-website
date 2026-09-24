@@ -48,10 +48,16 @@ const AccountDropdown = ({ user, compact = false }) => {
       const res = await axiosPrivate.post("/auth/signout");
       return res.data;
     },
-    onSuccess: (data) => {
-      setAccessToken(null);
-      queryClient.removeQueries();
+    onSuccess: async (data) => {
       setOpen(false);
+      // Stop whatever is still in flight first, so a response that was started
+      // while signed in can't repopulate the caches we drop right after.
+      await queryClient.cancelQueries();
+      setAccessToken(null);
+      // Drop every cached resource (user, cart, wishlist, orders …). The header
+      // then re-checks /auth/user against the (now cleared) cookie and falls
+      // back to the signed-out UI.
+      queryClient.removeQueries();
       router.push("/auth/signin");
       toast.success(data?.message || "Signed out successfully");
     },
@@ -158,7 +164,7 @@ const AccountDropdown = ({ user, compact = false }) => {
           <ShoppingBag className="h-4 w-4" />
           Orders
         </Link>
-        <Link
+        {/* <Link
           href="/wishlist"
           role="menuitem"
           onClick={() => setOpen(false)}
@@ -166,7 +172,7 @@ const AccountDropdown = ({ user, compact = false }) => {
         >
           <Heart className="h-4 w-4" />
           Wishlist
-        </Link>
+        </Link> */}
         <div className="h-px w-full bg-textColor/5 my-1" />
         <button
           type="button"

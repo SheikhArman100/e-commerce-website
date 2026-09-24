@@ -111,9 +111,9 @@ const SignInForm = () => {
             placeholder="Enter your password.."
             className="w-full rounded-md border border-textColor/10 px-4 shadow-sm text-sm bg-white/50 py-3 focus:border-accentColor focus:outline-0 transition-all text-textColor"
           />
-          <span className="pointer-events-none absolute inset-y-0 start-0 grid w-10 place-content-center text-stone-500">
+          {/* <span className="pointer-events-none absolute inset-y-0 start-0 grid w-10 place-content-center text-stone-500">
             <Lock size={16} />
-          </span>
+          </span> */}
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}

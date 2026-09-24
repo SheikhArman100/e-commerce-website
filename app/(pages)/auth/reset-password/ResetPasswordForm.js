@@ -84,9 +84,9 @@ const ResetPasswordForm = () => {
             placeholder="••••••••"
             className={inputClass}
           />
-          <span className="pointer-events-none absolute inset-y-0 start-0 grid w-10 place-content-center text-stone-500">
+          {/* <span className="pointer-events-none absolute inset-y-0 start-0 grid w-10 place-content-center text-stone-500">
             <Lock size={16} />
-          </span>
+          </span> */}
           <button
             type="button"
             onClick={() => setShow((s) => ({ ...s, next: !s.next }))}
@@ -111,9 +111,9 @@ const ResetPasswordForm = () => {
             placeholder="••••••••"
             className={inputClass}
           />
-          <span className="pointer-events-none absolute inset-y-0 start-0 grid w-10 place-content-center text-stone-500">
+          {/* <span className="pointer-events-none absolute inset-y-0 start-0 grid w-10 place-content-center text-stone-500">
             <Lock size={16} />
-          </span>
+          </span> */}
           <button
             type="button"
             onClick={() => setShow((s) => ({ ...s, confirm: !s.confirm }))}
