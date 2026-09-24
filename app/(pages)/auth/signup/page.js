@@ -3,6 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import FormSignup from "./FormSignup";
 
+export const metadata = {
+  title: "Sign Up | Baking Tales",
+  description: "Create a Baking Tales account to order handcrafted cakes and track deliveries.",
+};
+
 const Signup = () => {
   return (
     <article className="w-full min-h-screen mt-4  text-textColor border-t border-textColor/10 flex flex-col items-center justify-center   md:pt-[7rem] md:pb-8 px-8 lg:px-[2rem] xl:px-[4rem] md:grid md:grid-cols-2 ">

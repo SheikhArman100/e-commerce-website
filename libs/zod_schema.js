@@ -9,14 +9,16 @@ export const signinSchema = z.object({
 });
 
 //signup schema
+// Bangladeshi mobile: 11 digits, starts with 013-019 (e.g. 01XXXXXXXXX)
 const phoneRegex = new RegExp(/^01[3-9]\d{8}$/);
 export const signupSchema = z.object({
   name: z.string().nonempty("name is required"),
   phoneNumber: z
     .string()
     .nonempty("Phone Number is required")
+    .trim()
     .regex(phoneRegex, {
-      message: "Must e a bangladeshi number",
+      message: "Must be a valid Bangladeshi number (e.g. 01XXXXXXXXX)",
     }),
   email: z.string().nonempty("Email is required").email({
     message: "not a valid mail",
@@ -63,6 +65,35 @@ export const cartSchema = z.object({
   }),
 });
 
+//change password (authenticated) — mirrors backend changePasswordSchema
+export const changePasswordSchema = z
+  .object({
+    oldPassword: z.string().nonempty("Old password is required"),
+    newPassword: z.string().min(6, "New password must be at least 6 characters"),
+    confirmPassword: z.string().nonempty("Please confirm your new password"),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+//forget password — mirrors backend forgetPasswordSchema
+export const forgetPasswordSchema = z.object({
+  email: z.string().nonempty("Email is required").email({
+    message: "Not a valid email",
+  }),
+});
+
+//reset password — mirrors backend resetPasswordSchema (token travels in query)
+export const resetPasswordSchema = z
+  .object({
+    newPassword: z.string().min(6, "New password must be at least 6 characters"),
+    confirmPassword: z.string().nonempty("Please confirm your new password"),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 //checkout form
 export const checkoutSchema = z.object({
   fullName: z.string({
@@ -75,8 +106,9 @@ export const checkoutSchema = z.object({
     }),
   phoneNumber: z
     .string().nonempty("Phone number is required")
+    .trim()
     .regex(phoneRegex, {
-      message: "Must be a bangladeshi number",
+      message: "Must be a valid Bangladeshi number (e.g. 01XXXXXXXXX)",
     }),
   address: z.string().nonempty("Address is required"),
   city: z.string().nonempty("City is required"),

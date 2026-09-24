@@ -5,15 +5,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { axiosPublic } from "@/libs/axios/config";
-import { setAccessToken } from "@/libs/zustand/authStore";
 import { useState } from "react";
 import { Eye, EyeOff, User, Phone, AtSign } from "lucide-react";
 
 const FormSignup = () => {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -33,14 +31,22 @@ const FormSignup = () => {
       return response.data;
     },
     onSuccess: (data) => {
-      setAccessToken(data.accessToken);
-      toast.success(data.message || "Account created successfully!");
-      queryClient.invalidateQueries({ queryKey: ["auth", "check"], refetchType: "all" });
-      router.push("/");
+      // Backend signup only returns { id } — the account is unverified, so
+      // there is NO session yet. Send the user to sign in (they verify email first).
+      toast.success(
+        data.message ||
+          "Account created! Please check your email to verify your account."
+      );
+      router.push("/auth/signin");
       reset();
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || "Sign up failed");
+      const serverErrors = error.response?.data?.errorMessages;
+      toast.error(
+        serverErrors?.[0]?.message ||
+          error.response?.data?.message ||
+          "Sign up failed"
+      );
     },
   });
 
@@ -82,7 +88,10 @@ const FormSignup = () => {
           <div className="relative">
             <input
               type="tel"
-              placeholder="01*** ******"
+              inputMode="numeric"
+              autoComplete="tel"
+              maxLength={11}
+              placeholder="01XXXXXXXXX"
               {...register("phoneNumber")}
               className="w-full rounded-md border border-textColor/10 px-4 shadow-sm text-sm bg-white/50 py-3 focus:border-accentColor focus:outline-0 transition-all text-textColor"
             />
