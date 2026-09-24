@@ -94,6 +94,56 @@ export const resetPasswordSchema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+//update profile (authenticated) — mirrors backend updateProfileSchema
+// (all fields optional server-side; empty inputs are omitted from the PATCH
+// so backend min-length rules never see an empty string)
+const bdPhoneLoose = /^(?:\+?88)?01[3-9]\d{8}$/;
+
+export const updateProfileSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1, "Name is required")
+    .min(2, "Name must be at least 2 characters")
+    .max(50, "Name must not exceed 50 characters")
+    .regex(
+      /^[a-zA-Z\s'-]+$/,
+      "Name can only contain letters, spaces, hyphens, and apostrophes"
+    ),
+  phoneNumber: z
+    .string()
+    .trim()
+    .optional()
+    .refine((val) => !val || bdPhoneLoose.test(val), {
+      message:
+        "Please enter a valid Bangladeshi phone number (e.g., 017******** or +88017********)",
+    }),
+  address: z
+    .string()
+    .trim()
+    .max(200, "Address must not exceed 200 characters")
+    .optional()
+    .refine((val) => !val || val.length >= 5, {
+      message: "Address must be at least 5 characters",
+    }),
+  city: z
+    .string()
+    .trim()
+    .max(50, "City must not exceed 50 characters")
+    .optional()
+    .refine((val) => !val || val.length >= 2, {
+      message: "City must be at least 2 characters",
+    }),
+  road: z
+    .string()
+    .trim()
+    .max(100, "Road must not exceed 100 characters")
+    .optional()
+    .refine((val) => !val || val.length >= 2, {
+      message: "Road must be at least 2 characters",
+    }),
+});
+
 //checkout form
 export const checkoutSchema = z.object({
   fullName: z.string({
