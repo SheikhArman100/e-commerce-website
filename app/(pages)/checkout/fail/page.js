@@ -1,68 +1,27 @@
 "use client";
-import Button from "@/Components/Button.js";
-import RevealTitle from "@/Components/RevealTitle";
-import { XCircle } from "lucide-react";
-import { useSearchParams } from "next/navigation.js";
 
-const Fail = () => {
-  const searchParams = useSearchParams();
-  const tranId = searchParams.get("tran_id");
+import CheckoutResult from "../CheckoutResult.js";
 
-  return (
-    <article className="w-full min-h-screen bg-bgColor relative overflow-hidden flex flex-col items-center pt-24 pb-20 px-6 md:px-12 lg:px-24">
-      {/* Atmospheric Background Glows */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accentColor/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accentColor/3 blur-[100px] rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none" />
-
-      <div className="relative z-10 w-full max-w-[600px] flex flex-col items-center justify-center min-h-[70vh]">
-        {/* Icon */}
-        <div className="mb-8">
-          <div className="w-20 h-20 rounded-full bg-red-50 flex items-center justify-center">
-            <XCircle size={48} className="stroke-red-500" />
-          </div>
-        </div>
-
-        {/* Title */}
-        <RevealTitle
-          phrases={["Payment Failed"]}
-          phraseStyle="text-4xl md:text-5xl lg:text-6xl font-light tracking-tighter text-textColor leading-tight text-center"
-        />
-
-        {/* Divider */}
-        <div className="h-[1px] w-12 bg-accentColor mt-8 opacity-50" />
-
-        {/* Message */}
-        <p className="mt-8 text-[0.65rem] uppercase tracking-[0.2em] text-stone-500 text-center leading-relaxed max-w-md">
-          We were unable to process your payment. 
-          <br />
-          Please try again or choose a different payment method.
-        </p>
-
-        {tranId && (
-          <p className="mt-6 text-[0.55rem] uppercase tracking-[0.2em] text-stone-400 text-center">
-            Transaction ID: <span className="font-mono text-stone-500">{tranId}</span>
-          </p>
-        )}
-
-        {/* Actions */}
-        <div className="mt-12 flex flex-col sm:flex-row items-center gap-4">
-          <Button href="/checkout" className="group bg-accentColor rounded-sm hover:bg-accentColor/90 transition-all duration-300 shadow-xl border-0 h-14 w-full sm:w-auto min-w-[12rem]">
-            <Button.Border1 className="border-accentColor2/30 z-[1] group-hover:scale-x-105 transition-transform" />
-            <Button.Border2 className="border-accentColor2/30 z-[2] group-hover:scale-x-105 transition-transform" />
-            <Button.Title className="font-black uppercase tracking-[0.3em] text-[0.75rem] text-bgColor">
-              Try Again
-            </Button.Title>
-          </Button>
-
-          <Button href="/" className="group border border-stone-300 rounded-sm hover:bg-stone-50 transition-all duration-300 h-14 w-full sm:w-auto min-w-[12rem]">
-            <Button.Title className="font-black uppercase tracking-[0.3em] text-[0.75rem] text-stone-600">
-              Return Home
-            </Button.Title>
-          </Button>
-        </div>
-      </div>
-    </article>
-  );
-};
+/**
+ * Where SSLCommerz sends a declined payment. `POST /payment/fail` has already
+ * rolled the incomplete shell order back, and the cart was never touched — which
+ * is exactly what the copy promises, plus a way back to the same selection.
+ */
+const Fail = () => (
+  <CheckoutResult
+    tone="fail"
+    title="Payment Failed"
+    message="The gateway could not complete the transaction, so no order was placed and nothing was charged."
+    notes={[
+      "Your selection is untouched — the same creations are still in your cart.",
+      "Trying again opens a fresh payment session for that same selection.",
+      "If a charge does appear on your statement, quote the transaction reference above and we will trace it immediately.",
+    ]}
+    actions={[
+      { href: "/checkout", label: "Try Again", primary: true },
+      { href: "/cart", label: "Review Selection" },
+    ]}
+  />
+);
 
 export default Fail;

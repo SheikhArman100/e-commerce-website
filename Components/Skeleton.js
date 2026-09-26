@@ -1,6 +1,6 @@
 /**
- * Skeleton loaders for the shop (products) page, the product-detail page and the
- * order-history page.
+ * Skeleton loaders for the shop (products) page, the product-detail page, the
+ * order-history page and the cart / check-out frame.
  *
  * SSR already delivers the heading, chips, filter pills and the first grid
  * server-side, so the only states left that can pend are URL navigations: the
@@ -8,9 +8,11 @@
  * shows while a filter/search/page change streams in, base/product blocks back
  * the mobile result-count pill, and the detail skeletons below mirror
  * ProductClient's gallery / info / similar-grids so route transitions land
- * without shifting the layout. `animate-pulse` is a core Tailwind utility;
- * decorative blocks are `aria-hidden` while their container announces itself
- * via `role="status"` + sr-only text.
+ * without shifting the layout. The order, cart and summary skeletons follow the
+ * same rule for their own pages: same boxes, same column classes, no jump.
+ * `animate-pulse` is a core Tailwind utility; decorative blocks are
+ * `aria-hidden` while their container announces itself via `role="status"` +
+ * sr-only text.
  */
 
 /** Base shimmering block. */
@@ -175,6 +177,63 @@ export const OrdersListSkeleton = ({ count = 3 }) => (
         <OrderCardSkeleton key={i} />
       ))}
     </div>
+  </div>
+);
+
+/**
+ * One cart row placeholder, mirroring <CartItem>'s box (thumbnail, title and
+ * category lines, the flavour/size row with the quantity pill, the price
+ * column) so the cart streams in without shifting the summary rail.
+ */
+export const CartItemSkeleton = () => (
+  <div className="flex w-full items-center gap-x-6 border-b border-textColor/10 py-6 last:border-none">
+    <Skeleton className="h-20 w-20 shrink-0 rounded-sm md:h-24 md:w-24" />
+    <div className="flex min-w-0 flex-1 flex-col gap-3">
+      <Skeleton className="h-3.5 w-44" />
+      <Skeleton className="h-2.5 w-28" />
+      <div className="mt-1 flex items-center gap-4">
+        <Skeleton className="h-3 w-20 rounded-full" />
+        <Skeleton className="h-7 w-24 rounded-full" />
+      </div>
+    </div>
+    <div className="flex flex-col items-end gap-3">
+      <Skeleton className="h-4 w-20" />
+      <Skeleton className="h-8 w-8 rounded-sm" />
+    </div>
+  </div>
+);
+
+/** Cart list loader: a few rows plus its own announcement. */
+export const CartListSkeleton = ({ count = 3 }) => (
+  <div role="status" className="flex w-full flex-col">
+    <span className="sr-only">Loading your cart...</span>
+    {Array.from({ length: count }).map((_, i) => (
+      <CartItemSkeleton key={i} />
+    ))}
+  </div>
+);
+
+/**
+ * The summary rail placeholder (glass card: heading rule, the money rows and a
+ * full-width CTA block) shared by the cart and the check-out rail.
+ */
+export const OrderSummarySkeleton = () => (
+  <div
+    role="status"
+    className="w-full rounded-sm border border-textColor/10 bg-white/50 p-10 shadow-2xl backdrop-blur-[20px]"
+  >
+    <span className="sr-only">Loading the order summary...</span>
+    <Skeleton className="mb-10 h-3 w-32" />
+    <div className="flex flex-col gap-6">
+      <Skeleton className="h-3 w-full" />
+      <Skeleton className="h-3 w-11/12" />
+      <Skeleton className="h-3 w-full" />
+    </div>
+    <div className="mt-10 flex items-center justify-between border-t border-textColor/10 pt-10">
+      <Skeleton className="h-3 w-24" />
+      <Skeleton className="h-7 w-28" />
+    </div>
+    <Skeleton className="mt-12 h-16 w-full rounded-sm" />
   </div>
 );
 

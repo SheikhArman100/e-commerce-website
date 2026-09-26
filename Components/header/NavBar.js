@@ -1,6 +1,7 @@
 "use client"
 import { Heart, User } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import AccountDropdown from "./AccountDropdown";
 import AnimatedLink from "./AnimatedLink";
 import CartButton from "./CartButton";
@@ -29,9 +30,15 @@ const navItems = [
 const NavBar = () => {
   const { data: user, isPending } = useUserDetails();
   const storedToken = useAuthStore((state) => state.accessToken);
+  // The server never has localStorage, so it always renders the guest block.
+  // The first client render has to match that HTML exactly or React throws a
+  // hydration error (#418) and replaces the whole tree — so the session check
+  // only starts influencing the render after mount, once hydration is done.
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
   // No stored session => anonymous visitor: show Sign in instantly (SSR too).
   // Stored session + pending check => reserve space to avoid header jump.
-  const checkingSession = isPending && !!storedToken;
+  const checkingSession = hydrated && isPending && !!storedToken;
 
   return (
     <div className="hidden  md:grid w-full max-w-[1600px] mx-auto grid-cols-3 py-2 px-8 md:px-12">
@@ -81,7 +88,7 @@ const NavBar = () => {
             >
               <Heart className="h-6 w-6 text-accentColor" />
             </Link>
-            <CartButton />
+            <CartButton isSignedIn />
             <AccountDropdown user={user} />
           </div>
         )}

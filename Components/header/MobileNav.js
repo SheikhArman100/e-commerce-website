@@ -8,7 +8,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Facebook, Heart, Instagram, Menu, Twitter, X, User } from "lucide-react";
 import Link from "next/link.js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useUserDetails from "@/hooks/useUserDetails.js";
 import { useAuthStore } from "@/libs/zustand/authStore.js";
 import CartButton from "./CartButton.js";
@@ -35,12 +35,17 @@ const navItems = [
 
 const MobileNav = () => {
   const [isActive, setIsActive] = useState(false);
-  
+
   const { data: user, isPending } = useUserDetails();
   const storedToken = useAuthStore((state) => state.accessToken);
+  // Hydration-safe: the server renders the guest block (no localStorage there),
+  // so the session check may only reshape the header after mount — otherwise
+  // React sees different HTML on the client and bails out of hydrating it.
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
   // Same guest-first logic as NavBar: instant Sign in, skeleton only when a
   // stored session is actually being revalidated.
-  const checkingSession = isPending && !!storedToken;
+  const checkingSession = hydrated && isPending && !!storedToken;
 
   return (
     <section className="w-full mt-2 md:hidden">
@@ -95,7 +100,7 @@ const MobileNav = () => {
               >
                 <Heart className="h-5 w-5 text-accentColor" />
               </Link>
-              <CartButton />
+              <CartButton isSignedIn />
               <AccountDropdown user={user} compact />
             </div>
           )}

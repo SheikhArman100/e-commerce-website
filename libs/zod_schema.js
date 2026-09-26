@@ -145,22 +145,45 @@ export const updateProfileSchema = z.object({
 });
 
 //checkout form
+// Mirrors the API's own `updateProfileSchema` (user.validation.ts) rule for
+// rule, because the check-out form is PATCHed onto the profile before the order
+// is created — a field the storefront accepts but the API refuses would stop the
+// order from ever being placed. The contact email is NOT part of this schema: it
+// is display-only (the order's customer details come from the signed-in
+// account), and requiring it only blocked submission when a profile had none.
 export const checkoutSchema = z.object({
-  fullName: z.string({
-    required_error: "Name is required",
-  }),
-  email: z
-    .string().nonempty("Email is required")
-    .email({
-      message: "Not a valid email",
-    }),
-  phoneNumber: z
-    .string().nonempty("Phone number is required")
+  fullName: z
+    .string()
     .trim()
-    .regex(phoneRegex, {
-      message: "Must be a valid Bangladeshi number (e.g. 01XXXXXXXXX)",
+    .min(1, "Name is required")
+    .min(2, "Name must be at least 2 characters")
+    .max(50, "Name must not exceed 50 characters")
+    .regex(
+      /^[a-zA-Z\s'-]+$/,
+      "Name can only contain letters, spaces, hyphens, and apostrophes"
+    ),
+  phoneNumber: z
+    .string()
+    .trim()
+    .min(1, "Phone number is required")
+    .regex(bdPhoneLoose, {
+      message:
+        "Please enter a valid Bangladeshi number (e.g. 017******** or +88017********)",
     }),
-  address: z.string().nonempty("Address is required"),
-  city: z.string().nonempty("City is required"),
-  road: z.string().nonempty("Road details is required"),
+  address: z
+    .string()
+    .trim()
+    .min(5, "Address must be at least 5 characters")
+    .max(200, "Address must not exceed 200 characters"),
+  city: z
+    .string()
+    .trim()
+    .min(2, "City must be at least 2 characters")
+    .max(50, "City must not exceed 50 characters"),
+  road: z
+    .string()
+    .trim()
+    .min(2, "Road details must be at least 2 characters")
+    .max(100, "Road details must not exceed 100 characters"),
 });
+
