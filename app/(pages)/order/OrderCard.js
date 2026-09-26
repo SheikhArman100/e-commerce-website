@@ -2,7 +2,7 @@
 
 import { cn } from "@/libs/utils.js";
 import { motion } from "framer-motion";
-import { CalendarDays, ChevronDown, PackageSearch } from "lucide-react";
+import { CalendarDays, ChevronDown, PackageSearch, Star } from "lucide-react";
 import Image from "next/image.js";
 import Link from "next/link.js";
 import { useState } from "react";
@@ -30,8 +30,10 @@ const COLLAPSED_ITEMS = 3;
 /**
  * One purchased delicacy: thumbnail with its quantity badge, the snapshot of
  * what was bought (title / flavour / size / unit price) and the line total.
+ * Delivered items still awaiting a review get an inline "Write review" button
+ * that opens the shared review modal for that exact order/product pair.
  */
-const OrderItemRow = ({ item }) => {
+const OrderItemRow = ({ item, order, pending = [], onReview }) => {
   const fileBase = process.env.NEXT_PUBLIC_FILE_URL;
   const image = orderItemImage(item);
   const [imageFailed, setImageFailed] = useState(false);
@@ -42,6 +44,9 @@ const OrderItemRow = ({ item }) => {
   const href = item?.product?.slug ? `/products/${item.product.slug}` : null;
   const tint = softFlavorTint(flavor.color);
   const showImage = Boolean(image) && !imageFailed;
+  const reviewTarget = pending.find(
+    (p) => Number(p.orderId) === Number(order?.id) && Number(p.productId) === Number(item?.productId),
+  );
 
   return (
     <div className="group/item flex items-center gap-x-4 py-4 md:gap-x-6">
@@ -109,6 +114,16 @@ const OrderItemRow = ({ item }) => {
           <span className="text-[0.55rem] font-medium uppercase tracking-[0.2em] text-stone-400">
             {formatAmount(item?.price)} each
           </span>
+          {reviewTarget && (
+            <button
+              type="button"
+              onClick={() => onReview?.(reviewTarget)}
+              className="flex items-center gap-x-1.5 rounded-full border border-accentColor/30 px-3 py-1 text-[0.5rem] font-black uppercase tracking-[0.2em] text-accentColor transition-colors hover:bg-accentColor hover:text-bgColor"
+            >
+              <Star size={10} className="fill-current" />
+              Write review
+            </button>
+          )}
         </div>
       </div>
 
@@ -126,7 +141,7 @@ const OrderItemRow = ({ item }) => {
  * Orders with many items stay scannable — only the first rows show until the
  * customer asks for the rest.
  */
-const OrderCard = ({ order, index = 0 }) => {
+const OrderCard = ({ order, index = 0, pending = [], onReview }) => {
   const [expanded, setExpanded] = useState(false);
 
   const items = order?.items ?? [];
@@ -195,7 +210,13 @@ const OrderCard = ({ order, index = 0 }) => {
         <div className="px-6 md:px-8">
           <div className="flex flex-col divide-y divide-textColor/10">
             {visibleItems.map((item) => (
-              <OrderItemRow key={item.id} item={item} />
+              <OrderItemRow
+                key={item.id}
+                item={item}
+                order={order}
+                pending={pending}
+                onReview={onReview}
+              />
             ))}
           </div>
 

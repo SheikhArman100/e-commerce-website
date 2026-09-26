@@ -2,8 +2,10 @@
 
 import Button from "@/Components/Button.js";
 import Pagination from "@/Components/Pagination.js";
+import ReviewPromptModal from "@/Components/ReviewPromptModal.js";
 import { OrdersListSkeleton } from "@/Components/Skeleton.js";
 import useOrders from "@/hooks/useOrders.js";
+import usePendingReviews from "@/hooks/usePendingReviews.js";
 import { AlertTriangle, PackageSearch, RotateCcw } from "lucide-react";
 import { useState } from "react";
 import OrderCard from "./OrderCard.js";
@@ -73,7 +75,9 @@ const OrderEmptyState = () => (
  */
 const OrderContainer = () => {
   const [page, setPage] = useState(1);
+  const [reviewTarget, setReviewTarget] = useState(null);
   const { data, isPending, isError, isFetching, refetch } = useOrders(page, ORDERS_PER_PAGE);
+  const { data: pendingReviews = [] } = usePendingReviews();
 
   const orders = data?.orders ?? [];
   const meta = data?.meta;
@@ -105,9 +109,24 @@ const OrderContainer = () => {
 
       <div className="flex w-full flex-col gap-8">
         {orders.map((order, index) => (
-          <OrderCard key={order.id} order={order} index={index} />
+          <OrderCard
+            key={order.id}
+            order={order}
+            index={index}
+            pending={pendingReviews}
+            onReview={setReviewTarget}
+          />
         ))}
       </div>
+
+      {/* Explicit "Write review" flow for a chosen delivered item; hidden
+          unless asked for so the global auto prompt stays the only one. */}
+      {reviewTarget && (
+        <ReviewPromptModal
+          item={reviewTarget}
+          onClose={() => setReviewTarget(null)}
+        />
+      )}
 
       <Pagination currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
 

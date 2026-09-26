@@ -1,5 +1,6 @@
 import QueryProvider from "@/libs/react-query/QueryProvider";
 import ToastifyComponent from "@/libs/react-toastify/ToastifyComponent";
+import ReviewPromptModal from "@/Components/ReviewPromptModal";
 import { Dancing_Script, Italiana, Playfair_Display, Poppins, Roboto_Condensed } from "next/font/google";
 import "./globals.css";
 
@@ -33,6 +34,9 @@ export default function RootLayout({ children }) {
       >
         <QueryProvider>
           {children}
+          {/* Delivered-but-unreviewed prompt for signed-in customers; the
+              component itself opts out on /auth and /checkout. */}
+          <ReviewPromptModal />
           <ToastifyComponent />
         </QueryProvider>
       </body>
