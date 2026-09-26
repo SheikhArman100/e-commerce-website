@@ -46,9 +46,13 @@ const ProductClient = ({ product, similarProducts = [] }) => {
     return sizes[0];
   }, [selectedFlavor, selectedSize]);
 
-  // Price calculations
-  const originalPrice = Number(sizeData?.originalPrice ?? sizeData?.price ?? 0);
-  const salesPrice = Number(sizeData?.salesPrice ?? originalPrice);
+  // Price calculations. The API returns the exact campaign amount (a percentage
+  // off a whole base price can land on a paisa), but the storefront quotes whole
+  // taka — so round for display only; checkout math lives in libs/orderTotals.
+  const originalPrice = Math.round(
+    Number(sizeData?.originalPrice ?? sizeData?.price ?? 0)
+  );
+  const salesPrice = Math.round(Number(sizeData?.salesPrice ?? originalPrice));
   const hasDiscount = salesPrice < originalPrice;
   const discountPercentage = hasDiscount
     ? Math.round((1 - salesPrice / originalPrice) * 100)

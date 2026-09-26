@@ -52,10 +52,14 @@ export const resolveProductOffer = (entry) => {
 
   const onSale = Boolean(cheapest) && cheapest.sales < cheapest.original;
 
+  // Campaign discounts yield fractions (e.g. ৳112.50); the storefront quotes
+  // whole taka, so the displayed prices are rounded — the discount % is still
+  // computed from the exact values above so the badge never disagrees with the
+  // struck-through price.
   return {
     item,
-    price: cheapest ? cheapest.original : 0,
-    salesPrice: onSale ? cheapest.sales : null,
+    price: cheapest ? Math.round(cheapest.original) : 0,
+    salesPrice: onSale ? Math.round(cheapest.sales) : null,
     discountPercentage: onSale
       ? Math.round((1 - cheapest.sales / cheapest.original) * 100)
       : 0,

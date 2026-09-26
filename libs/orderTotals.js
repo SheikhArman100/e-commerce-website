@@ -28,8 +28,12 @@
 /** Mirror of the API's `DELIVERY_CHARGE`. */
 export const DELIVERY_CHARGE = 60;
 
-/** The API's currency. */
-export const formatTaka = (value) => `৳${Number(value ?? 0).toFixed(2)}`;
+/**
+ * The API's currency. Campaign discounts are computed on a percentage and so
+ * land on fractions (৳112.50); the storefront quotes whole taka, so amounts are
+ * rounded for display only — the cart still sums the exact values it is charged.
+ */
+export const formatTaka = (value) => `৳${Math.round(Number(value ?? 0))}`;
 
 /** Unit price the API will charge, with the raw price as a fallback. */
 export const unitPrice = (item) =>

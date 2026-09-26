@@ -28,8 +28,14 @@ const SizeSelect = ({ sizes = [] }) => {
               const isSelected = field.value === item.id.toString();
               const isOutOfStock = s.stock === 0;
 
-              const originalPrice = Number(s.originalPrice ?? s.price ?? 0);
-              const salesPrice = Number(s.salesPrice ?? originalPrice);
+              // Rounded for display — the API's exact campaign price can be a
+              // fraction, but the storefront quotes whole taka.
+              const originalPrice = Math.round(
+                Number(s.originalPrice ?? s.price ?? 0)
+              );
+              const salesPrice = Math.round(
+                Number(s.salesPrice ?? originalPrice)
+              );
               const hasDiscount = salesPrice < originalPrice;
 
               return (
