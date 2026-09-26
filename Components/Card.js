@@ -8,7 +8,7 @@ import { Star } from 'lucide-react'
 
 const Card = ({className,children}) => {
   return (
-    <div className={twMerge("relative h-64 w-[10.5rem] sm:h-72 sm:w-60 md:w-64 md:h-80  p-2 sm:p-3 shadow-sm hover:shadow-md transition-all duration-300 rounded-sm border border-textColor/10 bg-white",className)}>
+    <div className={twMerge("relative h-64 w-[10.5rem] sm:h-72 sm:w-60 md:w-64 md:h-80 lg:h-[22rem] p-2 sm:p-3 shadow-sm hover:shadow-md transition-all duration-300 rounded-sm border border-textColor/10 bg-white",className)}>
         {children}
     </div>
   )
@@ -81,7 +81,7 @@ const FlavorColors = ({ className, colors, flavors, flavorNames, names }) => {
     </div>
   );
 };
-const CardInfo = ({ className, title, price, salesPrice, discountPercentage, href }) => {
+const CardInfo = ({ className, title, price, salesPrice, discountPercentage, campaignName, href }) => {
   return (
     <div className={twMerge("flex text-textColor flex-col items-center font-semibold transition-all", className)}>
       {href ? (
@@ -101,6 +101,17 @@ const CardInfo = ({ className, title, price, salesPrice, discountPercentage, hre
           <span className='text-xs lg:text-sm font-bold text-accentColor shadow-sm px-1 rounded-sm'>৳{price}</span>
         )}
       </div>
+      {/* Optional campaign ribbon — renders nothing when absent, so every
+          non-campaign consumer keeps the exact same card design. */}
+      {campaignName && (
+        <span
+          title={`Part of ${campaignName}`}
+          className="mt-1.5 flex max-w-full items-center gap-1 rounded-sm bg-accentColor/10 px-1.5 py-0.5 text-[9px] lg:text-[10px] font-bold uppercase tracking-widest text-accentColor"
+        >
+          <Star fill="currentColor" stroke="none" className="h-2 w-2 shrink-0" />
+          <span className="truncate">{campaignName}</span>
+        </span>
+      )}
     </div>
   );
 };

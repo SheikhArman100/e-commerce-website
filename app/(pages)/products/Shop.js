@@ -4,6 +4,7 @@ import Card from "@/Components/Card";
 import CategoriesList from "@/Components/CategoriesList";
 import Filter from "@/Components/Filter";
 import FilterMobile from "@/Components/FilterMobile";
+import { resolveProductOffer } from "@/libs/productOffer";
 import Pagination from "@/Components/Pagination";
 import { ProductGridSkeleton, Skeleton } from "@/Components/Skeleton";
 import { Search, SearchX, SlidersHorizontal, Star } from "lucide-react";
@@ -229,26 +230,22 @@ const Shop = ({
                     ).entries(),
                   ].map(([color, name]) => ({ color, name }));
                  
-                   const mainImagePath =allFlavorImages[0]?.path;
-                   const allPrices = product.flavors?.flatMap(f => f.sizes?.map(s => ({
-                     original: s.originalPrice,
-                     sales: s.salesPrice,
-                     discount: s.discountPercentage
-                   }))).filter(p => p.original !== undefined) || [];
-                   
-                   const minPriceVariant = allPrices.reduce((min, curr) => 
-                     (curr.sales < min.sales) ? curr : min, 
-                     allPrices[0] || { original: "0", sales: "0", discount: 0 }
-                   );
-                   
-                   const hasDiscount = minPriceVariant.discount > 0;
+                    const mainImagePath =allFlavorImages[0]?.path;
+                   // The public feed bakes campaign discounts into each size as
+                   // `originalPrice` (base) / `salesPrice` (campaign price) and
+                   // carries no `discountPercentage`, so pricing (cheapest size,
+                   // derived discount %, and the campaign behind that price) is
+                   // resolved by the shared helper — identical rule to Featured,
+                   // campaign and wishlist cards.
+                   const offer = resolveProductOffer(product) || {};
+                   const hasDiscount = offer.discountPercentage > 0;
                    const categoryImagePath = product.category?.image?.path;
 
                    return (
                      <Card key={index} className="">
                        {hasDiscount && (
                          <Card.Badge>
-                           {minPriceVariant.discount}% OFF
+                           {offer.discountPercentage}% OFF
                          </Card.Badge>
                        )}
                        <Card.CardContainer>
@@ -263,9 +260,10 @@ const Shop = ({
                          />
                          <Card.CardInfo
                            title={product.title}
-                           price={minPriceVariant.original}
-                           salesPrice={hasDiscount ? minPriceVariant.sales : null}
-                           discountPercentage={minPriceVariant.discount}
+                           price={offer.price}
+                           salesPrice={hasDiscount ? offer.salesPrice : null}
+                           discountPercentage={offer.discountPercentage}
+                           campaignName={offer.campaignName}
                            href={`/products/${product.slug}`}
                          />
                        </Card.CardContainer>

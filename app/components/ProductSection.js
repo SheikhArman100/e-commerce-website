@@ -85,6 +85,7 @@ const ProductSection = ({
                     price={offer.price}
                     salesPrice={offer.salesPrice}
                     discountPercentage={offer.discountPercentage}
+                    campaignName={offer.campaignName}
                     href={`/products/${offer.item.slug}`}
                   />
                 </Card.CardContainer>

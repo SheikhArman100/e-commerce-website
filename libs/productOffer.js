@@ -42,6 +42,14 @@ export const resolveProductOffer = (entry) => {
     offers[0]
   );
 
+  // Campaign behind the price the card advertises. Every feed names it the same
+  // way: the product endpoint and the wishlist attach `activeCampaign`
+  // (the campaign that produced the LOWEST size price), while GET /campaign/active
+  // wraps entries as `{ ...campaignProduct, product }` — the campaign itself is
+  // passed to <CampaignSection />, so the caller forwards its name there.
+  const campaignName =
+    entry?.product ? null : (item.activeCampaign?.title ?? null);
+
   const onSale = Boolean(cheapest) && cheapest.sales < cheapest.original;
 
   return {
@@ -61,6 +69,7 @@ export const resolveProductOffer = (entry) => {
     categoryImagePath: item.category?.image?.path,
     categoryLabel: item.category?.name,
     categoryName: item.category?.name?.toLowerCase(),
+    campaignName,
   };
 };
 

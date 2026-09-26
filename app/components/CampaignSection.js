@@ -310,6 +310,7 @@ const CampaignSection = ({
                         price={offer.price}
                         salesPrice={offer.salesPrice}
                         discountPercentage={offer.discountPercentage}
+                        campaignName={campaign.title}
                         href={`/products/${offer.item.slug}`}
                       />
                     </Card.CardContainer>
