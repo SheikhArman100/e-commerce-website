@@ -1,5 +1,6 @@
 /**
- * Skeleton loaders for the shop (products) and product-detail pages.
+ * Skeleton loaders for the shop (products) page, the product-detail page and the
+ * order-history page.
  *
  * SSR already delivers the heading, chips, filter pills and the first grid
  * server-side, so the only states left that can pend are URL navigations: the
@@ -112,6 +113,67 @@ export const ProductDetailSkeleton = () => (
           <ProductCardSkeleton key={i} />
         ))}
       </div>
+    </div>
+  </div>
+);
+
+/**
+ * One order-history card placeholder, mirroring <OrderCard>'s box (cream glass
+ * card, header lines, the four stage rail, item rows and the totals footer), so
+ * the archive streams in without shifting the layout.
+ */
+export const OrderCardSkeleton = () => (
+  <div className="w-full overflow-hidden rounded-sm border border-textColor/10 bg-white/50 p-6 shadow-lg backdrop-blur-[20px] md:p-8">
+    <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-2">
+        <Skeleton className="h-2 w-16" />
+        <Skeleton className="h-4 w-52" />
+        <Skeleton className="h-2.5 w-32" />
+      </div>
+      <div className="flex items-center gap-4">
+        <Skeleton className="h-3 w-32 rounded-full" />
+        <Skeleton className="h-7 w-24 rounded-full" />
+      </div>
+    </div>
+
+    <div className="mt-8 flex items-center gap-3 border-t border-textColor/10 pt-6">
+      <Skeleton className="h-6 w-6 rounded-full" />
+      <Skeleton className="h-[1px] flex-1" />
+      <Skeleton className="h-6 w-6 rounded-full" />
+      <Skeleton className="h-[1px] flex-1" />
+      <Skeleton className="h-6 w-6 rounded-full" />
+      <Skeleton className="h-[1px] flex-1" />
+      <Skeleton className="h-6 w-6 rounded-full" />
+    </div>
+
+    <div className="mt-8 flex flex-col gap-6 border-t border-textColor/10 pt-6">
+      {Array.from({ length: 2 }).map((_, i) => (
+        <div key={i} className="flex items-center gap-4">
+          <Skeleton className="h-14 w-14 rounded-sm md:h-16 md:w-16" />
+          <div className="flex flex-1 flex-col gap-2">
+            <Skeleton className="h-3 w-48" />
+            <Skeleton className="h-2.5 w-32" />
+          </div>
+          <Skeleton className="h-3 w-16" />
+        </div>
+      ))}
+    </div>
+
+    <div className="mt-8 flex items-center justify-between border-t border-textColor/10 pt-6">
+      <Skeleton className="h-3 w-40" />
+      <Skeleton className="h-6 w-28" />
+    </div>
+  </div>
+);
+
+/** Order-history list loader: a few card placeholders plus its own announcement. */
+export const OrdersListSkeleton = ({ count = 3 }) => (
+  <div role="status" className="flex w-full flex-col items-center">
+    <span className="sr-only">Loading your orders...</span>
+    <div className="flex w-full flex-col gap-8">
+      {Array.from({ length: count }).map((_, i) => (
+        <OrderCardSkeleton key={i} />
+      ))}
     </div>
   </div>
 );
