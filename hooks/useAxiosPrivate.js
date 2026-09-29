@@ -12,6 +12,25 @@ import { toast } from "react-toastify"
 // could not bring it back.
 const SESSION_EXPIRED_MESSAGE = "Your session has expired. Please sign in again."
 
+// --- Single-flight refresh ---
+// Module scope, so it is shared by every hook instance and survives re-renders.
+// A burst of 403s (cart + wishlist + orders all refetching) must produce ONE
+// call to /auth/token, not one per request: they would each overwrite the store
+// with their own answer, and a slower earlier refresh could clobber a newer
+// token. Everyone else awaits the same promise.
+let refreshInFlight = null;
+
+const singleFlight = (runRefresh) => {
+  if (!refreshInFlight) {
+    // `finally` clears the lock whether the refresh resolved or threw, so a
+    // failure can never wedge every later request into a rejected promise.
+    refreshInFlight = runRefresh().finally(() => {
+      refreshInFlight = null;
+    });
+  }
+  return refreshInFlight;
+};
+
 const useAxiosPrivate = () => {
   const update = useUpdateAT()
   const accessToken = useAuthStore((state) => state.accessToken)
@@ -51,8 +70,18 @@ const useAxiosPrivate = () => {
       response => response,
       async error => {
         const prevRequest = error?.config
-        const errorMessage = error?.response?.data?.message || ''
+        // Coerced: the API can return `message` as an array or object (Zod
+        // validation does), and calling .toLowerCase() on those would throw a
+        // TypeError from inside this handler, replacing the real error.
+        const errorMessage = String(error?.response?.data?.message ?? '')
         const status = error?.response?.status
+
+        // Did the API tell us the token is the problem? Phrased as a helper
+        // rather than a bare string compare so every path agrees on it.
+        const isTokenProblem =
+          errorMessage === 'Token has expired' ||
+          errorMessage === 'Invalid token format' ||
+          errorMessage.toLowerCase().includes('expired')
 
         // A retry issued on the quiet path below must never surface as a
         // second, user facing error.
@@ -72,7 +101,8 @@ const useAxiosPrivate = () => {
           // fails we stay quiet: the guest UI is already on screen.
           prevRequest.sent = true
           try {
-            const newAccessToken = await update()
+            const newAccessToken = await singleFlight(() => update())
+            if (!newAccessToken) return Promise.reject(error)
             prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
             prevRequest.silentRetry = true
             return axiosPrivate(prevRequest)
@@ -90,11 +120,11 @@ const useAxiosPrivate = () => {
         // 403 Forbidden
         if (status === 403 && !prevRequest?.sent) {
           // Check if it's specifically a token expiration
-          if (errorMessage === 'Token has expired' || errorMessage === 'Invalid token format'  || errorMessage.toLowerCase().includes('expired')) {
+          if (isTokenProblem) {
             prevRequest.sent = true
 
             try {
-              const newAccessToken = await update()
+              const newAccessToken = await singleFlight(() => update())
 
               if (!newAccessToken) {
                 // Refresh failed, sign out

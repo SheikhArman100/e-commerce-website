@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import {marqueeAD, marqueeContainer} from "@/libs/animation/marquee.js"
 import { Star } from "lucide-react";
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 // Time it takes the belt to travel one message-width (seconds) — lower value =
 // faster scroll. Kept constant no matter how many messages there are, so the
@@ -10,55 +10,13 @@ import React, { useEffect, useState } from 'react'
 const SECONDS_PER_MESSAGE = 2.5;
 
 /**
- * Builds the marquee label for a coupon, e.g. "WELCOME10 — 20% off your order".
- * Handles both discount types (PERCENTAGE / FIXED) and appends the minimum
- * order amount when one is set.
+ * The coupon strings are fetched on the server (see Header.js) and handed down
+ * as props, so the belt is already populated in the first paint — there is no
+ * empty frame, and this component never renders before the data exists.
  */
-const couponToMessage = (coupon) => {
-  if (!coupon?.code) return null;
-  const discountText =
-    coupon.discountType === "PERCENTAGE"
-      ? `${coupon.discountValue}% off`
-      : `৳${coupon.discountValue} off`;
-  const minOrderText = coupon.minOrderAmount
-    ? ` on orders over ৳${coupon.minOrderAmount}`
-    : "";
-  return `${coupon.code} — ${discountText}${minOrderText}`;
-};
-
-const Marquee = () => {
-  const [messages, setMessages] = useState([]);
-
-  // Fetch featured coupons from the public endpoint — no auth needed, so
-  // anonymous visitors see active coupons too. Backend already filters
-  // isActive/isFeatured/expiry and returns display-safe fields only.
-  // With no featured coupons (or on fetch failure) the banner stays hidden.
-  useEffect(() => {
-    let isMounted = true;
-    const fetchFeaturedCoupons = async () => {
-      try {
-        const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL;
-        const response = await fetch(`${backendURL}/coupon/featured`);
-        if (!response.ok) return;
-        const result = await response.json();
-        const featured = (result?.data || [])
-          .map(couponToMessage)
-          .filter(Boolean);
-        if (isMounted && featured.length > 0) {
-          setMessages(featured);
-        }
-      } catch (error) {
-        console.error("Error fetching featured coupons:", error);
-      }
-    };
-    fetchFeaturedCoupons();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
+const Marquee = ({ messages = [] }) => {
   // No featured coupons — render nothing at all
-  if (messages.length === 0) return null;
+  if (!messages.length) return null;
 
   // Seamless belt: repeat the message set an EVEN number of times and slide
   // the whole row from 0% to -50% (exactly half the belt = whole sets), so
