@@ -7,7 +7,7 @@ import FilterMobile from "@/Components/FilterMobile";
 import { resolveProductOffer } from "@/libs/productOffer";
 import Pagination from "@/Components/Pagination";
 import { ProductGridSkeleton, Skeleton } from "@/Components/Skeleton";
-import { Search, SearchX, SlidersHorizontal, Star } from "lucide-react";
+import { RefreshCw, Search, SearchX, SlidersHorizontal, Star, WifiOff } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState, useTransition } from "react";
 
@@ -203,8 +203,25 @@ const Shop = ({
           {isPending ? (
             <ProductGridSkeleton count={12} />
           ) : error ? (
-            <div className="flex items-center justify-center p-20">
-              <p className="text-3xl text-textColor font2">Something went wrong while curating your library.</p>
+            /* The server is unreachable — NOT "no results". These must never
+               look alike: an empty grid tells the customer their filters
+               matched nothing, when in fact nothing could be fetched. Same
+               boutique vocabulary as the rest of the page, plus a retry that
+               re-runs this server component's `no-store` fetch. */
+            <div className="flex flex-col items-center justify-center gap-6 p-20 text-center">
+              <WifiOff className="h-14 w-14 stroke-[1px] text-accentColor/50" />
+              <p className="max-w-[34rem] text-xl font-light italic leading-relaxed text-textColor/70">
+                We can&apos;t reach our kitchen servers just now, so the
+                collection can&apos;t load. Please try again in a moment.
+              </p>
+              <div className="h-[1px] w-12 bg-accentColor opacity-50" />
+              <button
+                onClick={() => router.refresh()}
+                className="inline-flex items-center gap-2 rounded-full bg-accentColor px-8 py-3 text-[0.7rem] font-black uppercase tracking-[0.3em] text-bgColor transition-opacity hover:opacity-90"
+              >
+                <RefreshCw className="h-3.5 w-3.5" />
+                <span>Try again</span>
+              </button>
             </div>
           ) : !products || products.length === 0 ? (
             <div className="flex flex-col items-center justify-center p-20 space-y-4 opacity-40">
