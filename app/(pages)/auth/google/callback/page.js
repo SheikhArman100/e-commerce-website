@@ -34,6 +34,10 @@ const GoogleCallbackInner = () => {
       setAccessToken(data.data?.accessToken ?? null);
       toast.success("Signed in with Google!");
       queryClient.invalidateQueries({ queryKey: ["auth", "check"], refetchType: "all" });
+      // The guest's cached ["user"] entry is a 401 ERROR; refresh it now that a
+      // session exists, or the header stays signed-out until something else
+      // happens to trigger a remount.
+      queryClient.invalidateQueries({ queryKey: ["user"] });
       router.replace(next || "/");
     },
     onError: (error) => {

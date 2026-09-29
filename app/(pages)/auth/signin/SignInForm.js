@@ -44,6 +44,11 @@ const SignInForm = () => {
       setAccessToken(data.data?.accessToken ?? null);
       toast.success(data.message || "Signed in successfully!");
       queryClient.invalidateQueries({ queryKey: ["auth", "check"], refetchType: "all" });
+      // A guest's cached ["user"] entry is a 401 ERROR, not data. Without this
+      // the header would keep rendering the signed-out UI until the 30s
+      // refetchOnMount/staleTime window elapsed, and usePendingReviews (which
+      // only enables once user data exists) would never turn on.
+      queryClient.invalidateQueries({ queryKey: ["user"] });
       router.push(next || "/");
       reset();
     },
