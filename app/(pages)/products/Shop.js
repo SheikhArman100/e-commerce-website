@@ -272,8 +272,8 @@ const Shop = ({
                            categoryImage={categoryImagePath ? `${fileBase}/${categoryImagePath}` : null}
                          />
                          <Card.FlavorColors colors={flavorEntries} />
-                         <Card.BgRemoveImage
-                           bgRemoveImage={mainImagePath ? `${fileBase}/${mainImagePath}` : null}
+                         <Card.CardPhoto
+                            src={mainImagePath ? `${fileBase}/${mainImagePath}` : null}
                          />
                          <Card.CardInfo
                            title={product.title}

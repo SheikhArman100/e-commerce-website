@@ -295,11 +295,11 @@ const CampaignSection = ({
                         }
                       />
                       <Card.FlavorColors colors={offer.flavorColors} flavorNames={offer.flavorNames} />
-                      {/* A missing image must stay `null` so <Card.BgRemoveImage />
+                      {/* A missing image must stay `null` so <Card.CardPhoto />
                           shows its "Gallery Pending" placeholder instead of
                           requesting `${fileBase}/undefined`. */}
-                      <Card.BgRemoveImage
-                        bgRemoveImage={
+                      <Card.CardPhoto
+                        src={
                           offer.mainImagePath
                             ? `${fileBase}/${offer.mainImagePath}`
                             : null

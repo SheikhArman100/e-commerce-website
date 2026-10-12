@@ -124,22 +124,22 @@ const Badge = ({ className, children }) => {
         </div>
     )
 }
-const BgRemoveImage=({className,bgRemoveImage})=>{
-    return(
-        <div className={twMerge("relative h-28 w-28  md:h-40 md:w-44  transition-all flex items-center justify-center bg-accentColor/5 rounded-2xl",className)}>
-        {bgRemoveImage ? (
-            <Image
-                src={bgRemoveImage}
-                alt="card image bg remove"
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="object-fit object-center w-full h-full p-2 scale-110 transition-transform "
-            />
-        ) : (
-            <span className="text-xs text-textColor/30 font-medium italic">Gallery Pending</span>
-        )}
+const CardPhoto = ({ className, src }) => {
+  return (
+    <div className={twMerge("relative h-36 w-32 sm:h-40 sm:w-40 md:h-48 md:w-52 transition-all flex items-center justify-center overflow-hidden rounded-md bg-accentColor/5", className)}>
+      {src ? (
+        <Image
+          src={src}
+          alt="product photo"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover object-center w-full h-full transition-transform duration-300 group-hover/card:scale-105"
+        />
+      ) : (
+        <span className="text-xs text-textColor/30 font-medium italic">Gallery Pending</span>
+      )}
     </div>
-    )
+  )
 }
 const CardImage=({className,cardImage})=>{
     return (
@@ -176,7 +176,7 @@ Card.CategoryIcon=CategoryIcon
 Card.FlavorColors=FlavorColors
 Card.CardInfo=CardInfo
 Card.Badge=Badge
-Card.BgRemoveImage=BgRemoveImage
+Card.CardPhoto = CardPhoto;
 Card.CardImage=CardImage
 Card.CardButtonWrapper=CardButtonWrapper
 

@@ -196,8 +196,8 @@ const ShowWishlist = () => {
                   flavorNames={offer.flavorNames}
                 />
 
-                <Card.BgRemoveImage
-                  bgRemoveImage={
+                <Card.CardPhoto
+                  src={
                     offer.mainImagePath
                       ? `${fileBase}/${offer.mainImagePath}`
                       : null
