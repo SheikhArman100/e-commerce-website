@@ -169,7 +169,7 @@ const ProductClient = ({ product, similarProducts = [] }) => {
         {/* Two-Column Product Dossier */}
         <div className="flex flex-col lg:flex-row gap-10 lg:gap-14 xl:gap-20 items-start">
           {/* Column 1: Gallery Showcase */}
-          <div className="w-full lg:w-1/2 xl:w-[52%] lg:sticky lg:top-28">
+          <div className="w-full lg:w-1/2 xl:w-[52%]">
             <div className="relative flex flex-col gap-4">
               {/* Main Showcase Stage */}
               <div className="relative aspect-square sm:aspect-[4/3] lg:aspect-square w-full rounded-2xl border border-textColor/10 bg-white/80 shadow-sm overflow-hidden flex items-center justify-center backdrop-blur-sm">
