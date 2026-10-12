@@ -122,7 +122,13 @@ const CampaignSection = ({
                 className="scale-[1.03] object-cover"
               />
             )}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#2F211D]/95 via-[#5D4037]/92 to-accentColor/95" />
+            {/* Translucent scrim: dark enough at the left (where the copy
+                sits) for the light text to stay readable, but light enough
+                on the right that the banner photo actually reads through.
+                Two layers — a directional wash plus a subtle bottom-up
+                shade — instead of one near-opaque fill that hid the image. */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#2F211D]/90 via-[#5D4037]/60 to-accentColor/35" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#2F211D]/55 via-transparent to-transparent" />
             <div className="absolute -top-24 -left-20 h-72 w-72 rounded-full bg-accentColor2/25 blur-3xl" />
             <div className="absolute -right-16 -bottom-28 h-80 w-80 rounded-full bg-accentColor/40 blur-3xl" />
           </div>
