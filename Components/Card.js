@@ -103,7 +103,7 @@ const CardInfo = ({ className, title, price, salesPrice, discountPercentage, cam
       </div>
       {/* Optional campaign ribbon — renders nothing when absent, so every
           non-campaign consumer keeps the exact same card design. */}
-      {campaignName && (
+      {/* {campaignName && (
         <span
           title={`Part of ${campaignName}`}
           className="mt-1.5 flex max-w-full items-center gap-1 rounded-sm bg-accentColor/10 px-1.5 py-0.5 text-[9px] lg:text-[10px] font-bold uppercase tracking-widest text-accentColor"
@@ -111,7 +111,7 @@ const CardInfo = ({ className, title, price, salesPrice, discountPercentage, cam
           <Star fill="currentColor" stroke="none" className="h-2 w-2 shrink-0" />
           <span className="truncate">{campaignName}</span>
         </span>
-      )}
+      )} */}
     </div>
   );
 };
@@ -126,14 +126,14 @@ const Badge = ({ className, children }) => {
 }
 const CardPhoto = ({ className, src }) => {
   return (
-    <div className={twMerge("relative h-36 w-32 sm:h-40 sm:w-40 md:h-48 md:w-52 transition-all flex items-center justify-center overflow-hidden rounded-md bg-accentColor/5", className)}>
+    <div className={twMerge("relative h-28 w-28  md:h-40 md:w-44 transition-all flex items-center justify-center overflow-hidden rounded-md bg-accentColor/5", className)}>
       {src ? (
         <Image
           src={src}
           alt="product photo"
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover object-[50%_50%] w-full h-full transition-transform duration-300 group-hover/card:scale-105"
+          className="object-fit w-full h-full transition-transform "
         />
       ) : (
         <span className="text-xs text-textColor/30 font-medium italic">Gallery Pending</span>

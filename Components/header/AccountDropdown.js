@@ -58,7 +58,7 @@ const AccountDropdown = ({ user, compact = false }) => {
       // then re-checks /auth/user against the (now cleared) cookie and falls
       // back to the signed-out UI.
       queryClient.removeQueries();
-      router.push("/auth/signin");
+      // router.push("/auth/signin");
       toast.success(data?.message || "Signed out successfully");
     },
     onError: (error) => {
