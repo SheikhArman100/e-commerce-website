@@ -133,7 +133,7 @@ const CardPhoto = ({ className, src }) => {
           alt="product photo"
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover object-center w-full h-full transition-transform duration-300 group-hover/card:scale-105"
+          className="object-cover object-[50%_50%] w-full h-full transition-transform duration-300 group-hover/card:scale-105"
         />
       ) : (
         <span className="text-xs text-textColor/30 font-medium italic">Gallery Pending</span>
@@ -153,7 +153,7 @@ const CardImage=({className,cardImage})=>{
             <Image
                 src={cardImage}
                 alt="card image hover"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-[50%_50%]"
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
