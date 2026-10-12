@@ -24,7 +24,7 @@ import { useCallback, useEffect, useState, useTransition } from "react";
  */
 const Shop = ({
   filters,
-  activeCategory,
+  activeCategorySlug,
   page,
   products = [],
   productsMeta = null,
@@ -60,7 +60,7 @@ const Shop = ({
       // with this change. Empty values are stripped; 0, false and 'all' are
       // kept so every selected filter stays shareable in the URL.
       const current = {
-        category: activeCategory,
+        category: activeCategorySlug,
         page,
         inStock: filters.inStock,
         minPrice: filters.minPrice,
@@ -81,7 +81,7 @@ const Shop = ({
         router.push(`${pathname}?${params.toString()}`, { scroll: false });
       });
     },
-    [activeCategory, page, filters, pathname, router, startTransition]
+    [activeCategorySlug, page, filters, pathname, router, startTransition]
   );
 
   // Debounced search term to URL
@@ -159,7 +159,7 @@ const Shop = ({
 
       <CategoriesList 
         categories={categories}
-        activeCategory={activeCategory} 
+        activeCategorySlug={activeCategorySlug} 
         onCategoryChange={handleCategoryChange} 
       />
 

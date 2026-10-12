@@ -147,11 +147,11 @@ const ProductClient = ({ product, similarProducts = [] }) => {
               <span>Collections</span>
             </Link>
             <span>/</span>
-            {product.category?.name && (
+            {product.category?.slug && (
               <>
                 <Link
                   href={`/products?category=${encodeURIComponent(
-                    product.category.name.toLowerCase()
+                    product.category.slug
                   )}`}
                   className="hover:text-accentColor transition-colors font-medium capitalize"
                 >

@@ -22,10 +22,10 @@ const first = (value) => (Array.isArray(value) ? value[0] : value);
  * fields, campaign-aware prices. Always `no-store`: campaign pricing and
  * stock change at any moment, so this fetch runs on every request.
  */
-async function getProducts({ page, category, filters }) {
+async function getProducts({ page, categorySlug, filters }) {
   try {
     const params = new URLSearchParams({ page: String(page), limit: "12" });
-    if (category && category !== "all") params.set("categoryId", category);
+    if (categorySlug && categorySlug !== "all") params.set("categorySlug", categorySlug);
     if (filters.minPrice) params.set("minPrice", String(filters.minPrice));
     if (filters.maxPrice) params.set("maxPrice", String(filters.maxPrice));
     if (filters.inStock) params.set("inStock", String(filters.inStock));
@@ -77,7 +77,7 @@ async function getPublicList(path) {
 const ShopPage = async ({ searchParams }) => {
   const sp = searchParams ?? {};
 
-  const activeCategory = first(sp.category) || "all";
+  const activeCategorySlug = first(sp.category) || "all";
   const page = parseInt(first(sp.page)) || 1;
   const filters = {
     inStock: first(sp.inStock) ?? null,
@@ -89,7 +89,7 @@ const ShopPage = async ({ searchParams }) => {
   };
 
   const [productsResult, categories, flavors, sizes] = await Promise.all([
-    getProducts({ page, category: activeCategory, filters }),
+    getProducts({ page, categorySlug: activeCategorySlug, filters }),
     getPublicList("category/public?limit=0"),
     getPublicList("flavor/public?limit=0"),
     getPublicList("size/public?limit=0"),
@@ -98,7 +98,7 @@ const ShopPage = async ({ searchParams }) => {
   return (
     <Shop
       filters={filters}
-      activeCategory={activeCategory}
+      activeCategorySlug={activeCategorySlug}
       page={page}
       products={productsResult.data}
       productsMeta={productsResult.meta}

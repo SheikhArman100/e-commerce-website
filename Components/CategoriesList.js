@@ -8,22 +8,21 @@
  */
 const CategoriesList = ({
   categories = [],
-  activeCategory,
+  activeCategorySlug,
   onCategoryChange,
 }) => {
 
-  const allCategories = [{ id: 'all', name: 'All' }, ...categories];
+  const allCategories = [{ slug: 'all', name: 'All' }, ...categories];
 
   return (
     <div className="w-full flex flex-wrap justify-center gap-3 py-6">
       {allCategories.map((category) => {
-        // `activeCategory` comes from the URL (always a string) while real ids
-        // are numbers, so compare as strings or the active chip never lights up.
-        const isActive = String(activeCategory) === String(category.id);
+        const value = category.slug ?? 'all';
+        const isActive = (activeCategorySlug || 'all') === value;
         return (
           <button
-            key={category.id}
-            onClick={() => onCategoryChange(category.id)}
+            key={category.slug ?? category.id}
+            onClick={() => onCategoryChange(value)}
             className={`
               px-6 py-2 rounded-full border transition-all duration-300 text-sm font-medium tracking-wide
               ${isActive 
