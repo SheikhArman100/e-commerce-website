@@ -126,14 +126,14 @@ const Badge = ({ className, children }) => {
 }
 const CardPhoto = ({ className, src }) => {
   return (
-    <div className={twMerge("relative h-28 w-28  md:h-40 md:w-44 transition-all flex items-center justify-center overflow-hidden rounded-md bg-accentColor/5", className)}>
+    <div className={twMerge("relative h-28 w-28 md:h-40 md:w-40 transition-all flex items-center justify-center overflow-hidden rounded-md bg-accentColor/5", className)}>
       {src ? (
         <Image
           src={src}
           alt="product photo"
           fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-fit w-full h-full transition-transform "
+          sizes="160px"
+          className="object-contain  transition-transform"
         />
       ) : (
         <span className="text-xs text-textColor/30 font-medium italic">Gallery Pending</span>
