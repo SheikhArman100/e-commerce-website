@@ -64,8 +64,13 @@ const ProfileDetails = () => {
   const queryClient = useQueryClient();
   const [editing, setEditing] = useState(false);
   const [preview, setPreview] = useState(null);
+  const [imgError, setImgError] = useState(false);
   const fileInputRef = useRef(null);
   const fileBase = process.env.NEXT_PUBLIC_FILE_URL;
+
+  useEffect(() => {
+    setImgError(false);
+  }, [profile]);
 
   const {
     register,
@@ -213,24 +218,33 @@ const ProfileDetails = () => {
     );
   }
 
-  const storedSrc = profile?.detail?.image?.path
-    ? `${fileBase}/${profile.detail.image.path}`
-    : profile?.detail?.profileImage || null;
+  const fallbackAvatar = "/assets/avatar.png";
+  const rawImage = profile?.detail?.image?.path || profile?.detail?.profileImage;
+  const storedSrc = (() => {
+    if (imgError || !rawImage) return fallbackAvatar;
+    if (
+      rawImage.startsWith("http://") ||
+      rawImage.startsWith("https://") ||
+      rawImage.startsWith("/")
+    ) {
+      return rawImage;
+    }
+    return fileBase
+      ? `${fileBase.replace(/\/$/, "")}/${rawImage.replace(/^\//, "")}`
+      : fallbackAvatar;
+  })();
   const avatarSrc = preview || storedSrc;
   return (
     <div className="w-full flex flex-col items-center mt-8">
       <div className="relative h-24 w-24 rounded-full overflow-hidden border border-accentColor/30 bg-accentColor/5 flex items-center justify-center">
-        {avatarSrc ? (
-          <Image
-            src={avatarSrc}
-            alt={profile?.name || "Profile photo"}
-            fill
-            sizes="96px"
-            className="object-cover"
-          />
-        ) : (
-          <User className="h-10 w-10 text-accentColor" />
-        )}
+        <Image
+          src={avatarSrc}
+          alt={profile?.name || "Profile photo"}
+          fill
+          sizes="96px"
+          className="object-cover"
+          onError={() => setImgError(true)}
+        />
         {editing && (
           <button
             type="button"

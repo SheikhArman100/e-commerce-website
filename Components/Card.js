@@ -133,7 +133,7 @@ const CardPhoto = ({ className, src }) => {
           alt="product photo"
           fill
           sizes="160px"
-          className="object-contain  transition-transform"
+          className="object-fill  transition-transform"
         />
       ) : (
         <span className="text-xs text-textColor/30 font-medium italic">Gallery Pending</span>

@@ -65,9 +65,25 @@ const AccountDropdown = ({ user, compact = false }) => {
       toast.error(error?.response?.data?.message || "Sign out failed");
     },
   });
-  const avatarSrc = user?.detail?.image?.path
-    ? `${fileBase}/${user.detail.image.path}`
-    : user?.detail?.profileImage || null;
+  const [imgError, setImgError] = useState(false);
+  useEffect(() => setImgError(false), [user]);
+
+  const fallbackAvatar = "/assets/avatar.png";
+  const rawUserImage = user?.detail?.image?.path || user?.detail?.profileImage;
+  const avatarSrc = (() => {
+    if (imgError || !rawUserImage) return fallbackAvatar;
+    if (
+      rawUserImage.startsWith("http://") ||
+      rawUserImage.startsWith("https://") ||
+      rawUserImage.startsWith("/")
+    ) {
+      return rawUserImage;
+    }
+    return fileBase
+      ? `${fileBase.replace(/\/$/, "")}/${rawUserImage.replace(/^\//, "")}`
+      : fallbackAvatar;
+  })();
+
   const displayName = user?.name || "My Account";
 
   return (
@@ -79,34 +95,27 @@ const AccountDropdown = ({ user, compact = false }) => {
         aria-expanded={open}
         title={displayName}
         className={`flex items-center ${
-          compact ? "gap-x-1" : "gap-x-1.5"
-        } rounded-full border border-accentColor/30 bg-bgColor py-1 ${
-          compact ? "pl-1 pr-1.5" : "pl-1 pr-2"
-        } hover:border-accentColor transition-all`}
+          compact ? "gap-x-1 py-0.5 pl-1 pr-1.5" : "gap-x-1.5 py-1 pl-1 pr-2"
+        } rounded-full border border-accentColor/30 bg-bgColor hover:border-accentColor transition-all`}
       >
         <span
           className={`relative ${
-            compact ? "h-7 w-7" : "h-8 w-8"
-          } rounded-full overflow-hidden flex items-center justify-center bg-accentColor/5`}
+            compact ? "h-6 w-6" : "h-8 w-8"
+          } rounded-full overflow-hidden flex items-center justify-center bg-accentColor/5 shrink-0`}
         >
-          {avatarSrc ? (
-            <Image
-              src={avatarSrc}
-              alt={displayName}
-              fill
-              sizes="32px"
-              className="object-cover"
-            />
-          ) : (
-            <User
-              className={`${compact ? "h-4 w-4" : "h-5 w-5"} text-accentColor`}
-            />
-          )}
+          <Image
+            src={avatarSrc}
+            alt={displayName}
+            fill
+            sizes="32px"
+            className="object-cover"
+            onError={() => setImgError(true)}
+          />
         </span>
         <svg
           viewBox="0 0 12 12"
           className={`${
-            compact ? "h-3 w-3" : "h-3.5 w-3.5"
+            compact ? "h-2.5 w-2.5" : "h-3.5 w-3.5"
           } text-stone-500 transition-transform duration-300 ${
             open ? "rotate-180" : ""
           }`}
@@ -124,18 +133,34 @@ const AccountDropdown = ({ user, compact = false }) => {
       <div
         role="menu"
         className={`absolute ${
-          compact ? "top-11 right-0 w-60" : "top-12 right-0 w-64"
+          compact
+            ? "top-11 right-0 w-64 max-w-[calc(100vw-24px)]"
+            : "top-12 right-0 w-64"
         } bg-bgColor border border-textColor/10 shadow-2xl rounded-sm p-2 flex flex-col gap-y-1 transform transition-all duration-300 origin-top-right z-50 ${
           open
             ? "scale-100 opacity-100"
             : "scale-95 opacity-0 pointer-events-none"
         }`}
       >
-        <div className="px-4 py-3 border-b border-textColor/5 mb-1">
-          <p className="text-sm font-medium text-textColor line-clamp-1">
-            {user?.name || "My Account"}
-          </p>
-          <p className="text-xs text-stone-500 line-clamp-1">{user?.email}</p>
+        <div className="flex items-center gap-x-3 px-3.5 py-3 border-b border-textColor/5 mb-1">
+          <div className="relative h-9 w-9 rounded-full overflow-hidden border border-accentColor/20 bg-accentColor/5 shrink-0">
+            <Image
+              src={avatarSrc}
+              alt={displayName}
+              fill
+              sizes="36px"
+              className="object-cover"
+              onError={() => setImgError(true)}
+            />
+          </div>
+          <div className="flex flex-col min-w-0 flex-1">
+            <p className="text-sm font-semibold text-textColor truncate">
+              {user?.name || "My Account"}
+            </p>
+            <p className="text-xs text-stone-500 break-all leading-snug mt-0.5">
+              {user?.email}
+            </p>
+          </div>
         </div>
         <Link
           href="/auth/profile"

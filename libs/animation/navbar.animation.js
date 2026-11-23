@@ -52,31 +52,52 @@ export const menuBorder = {
   },
 };
 
-export const mobileNav={
-  initial:{
-    scaleY:0
+export const mobileNav = {
+  initial: {
+    scaleY: 0,
   },
-  animate:{
-    scaleY:1,
-    transition:{
-      duration:0.4,
-      ease: [0.12, 0, 0.39, 0],
-      delayChildren:0.3,
-      
-    }
+  animate: {
+    scaleY: 1,
+    transition: {
+      duration: 0.38,
+      ease: [0.16, 1, 0.3, 1],
+      when: "beforeChildren",
+    },
   },
-  exit:{
-    scaleY:0,
-    transition:{
-      delay:1.4,
-      duration:0.4,
-      ease:"easeInOut",
-      delayChildren:0.4
-    }
-  }
-}
+  exit: {
+    scaleY: 0,
+    transition: {
+      duration: 0.32,
+      ease: [0.7, 0, 0.84, 0],
+      when: "afterChildren",
+    },
+  },
+};
 
-export const menuClose={
+export const drawerContentVariants = {
+  initial: {
+    opacity: 0,
+    y: 16,
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.3,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -10,
+    transition: {
+      duration: 0.2,
+      ease: "easeIn",
+    },
+  },
+};
+
+export const menuClose = {
   initial:{
     scale:0
   },
@@ -98,16 +119,35 @@ export const menuClose={
 }
 
 export const linkContainerSlide = {
-    initial: {x: 80,scale:0},
-    animate: {x: 0,scale:1, transition: { ease: [0.76, 0, 0.24, 1], delayChildren: 0.1,staggerChildren:0.1 }},
-    exit:  {x: 80,scale:0, transition: {  delay:1,duration:0.3, ease: [0.76, 0, 0.24, 1], delayChildren: 0.1,staggerChildren:0.1}}
-}
+  initial: { opacity: 0 },
+  animate: {
+    opacity: 1,
+    transition: {
+      delayChildren: 0.05,
+      staggerChildren: 0.06,
+    },
+  },
+  exit: {
+    opacity: 0,
+    transition: {
+      duration: 0.15,
+      ease: "easeIn",
+    },
+  },
+};
 export const linkSlide = {
-    initial: {y: 80, opacity:0},
-    animate: {y:0, opacity:1,transition:{duration:0.8,ease: [0.76, 0, 0.24, 1]}},
-    exit:{y:80,opacity:0,transition:{duration:0.2,ease: [0.76, 0, 0.24, 1]}}
-    
-}
+  initial: { y: 12, opacity: 0 },
+  animate: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.25, ease: "easeOut" },
+  },
+  exit: {
+    y: -6,
+    opacity: 0,
+    transition: { duration: 0.15, ease: "easeIn" },
+  },
+};
 
 //nav-left
 export const titleAnimation = {
