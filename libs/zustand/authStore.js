@@ -1,14 +1,9 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
 
-export const useAuthStore = create(
-  persist(
-    (set) => ({
-      accessToken: null,
-      setAccessToken: (accessToken) => set({ accessToken: accessToken })
-    }),
-    {
-      name: 'EcommerceJwt'
-    }
-  )
-)
+// In-memory access token store.
+// Storing JWTs in memory (rather than localStorage) prevents token theft via XSS.
+// Session persistence across page reloads is handled securely via the HttpOnly refresh token cookie.
+export const useAuthStore = create((set) => ({
+  accessToken: null,
+  setAccessToken: (accessToken) => set({ accessToken }),
+}))
