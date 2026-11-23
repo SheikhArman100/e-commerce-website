@@ -4,7 +4,7 @@ import Button from "@/Components/Button.js";
 import { useQueryClient } from "@tanstack/react-query";
 import { BadgeCheck, Ban, XCircle } from "lucide-react";
 import { useSearchParams } from "next/navigation.js";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 
 /**
  * One look for all three gateway landings (`/checkout/success|fail|cancel`).
@@ -26,7 +26,7 @@ const TONES = {
   cancel: { icon: Ban, ring: "bg-amber-50", stroke: "stroke-amber-500" },
 };
 
-const CheckoutResult = ({
+const CheckoutResultInner = ({
   tone = "success",
   title,
   message,
@@ -120,5 +120,17 @@ const CheckoutResult = ({
     </article>
   );
 };
+
+const CheckoutResult = (props) => (
+  <Suspense
+    fallback={
+      <article className="relative flex w-full min-h-screen flex-col items-center justify-center overflow-hidden bg-bgColor px-6 pt-24 pb-20">
+        <span className="loading loading-spinner loading-lg text-accentColor" />
+      </article>
+    }
+  >
+    <CheckoutResultInner {...props} />
+  </Suspense>
+);
 
 export default CheckoutResult;
