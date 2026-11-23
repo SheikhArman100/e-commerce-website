@@ -25,10 +25,8 @@ const ProductClient = ({ product, similarProducts = [] }) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState(null);
 
-  if (!product) return null;
-
   const fileBase = process.env.NEXT_PUBLIC_FILE_URL;
-  const flavors = product.flavors || [];
+  const flavors = product?.flavors || [];
   const selectedFlavor = flavors[selectedFlavorIndex] || flavors[0];
   const flavorImages = selectedFlavor?.images || [];
 
@@ -45,6 +43,8 @@ const ProductClient = ({ product, similarProducts = [] }) => {
     }
     return sizes[0];
   }, [selectedFlavor, selectedSize]);
+
+  if (!product) return null;
 
   // Price calculations. The API returns the exact campaign amount (a percentage
   // off a whole base price can land on a paisa), but the storefront quotes whole

@@ -15,6 +15,8 @@ import CartButton from "./CartButton.js";
 import AccountDropdown from "./AccountDropdown.js";
 import Logo from "./Logo.js";
 import IconCircleBorder from "./IconCircleBorder.js";
+import SectionTitle from "@/components/SectionTitle.js";
+import FramerMagnetic from "@/components/FramerMagnetic.js";
 const navItems = [
    {
     href: "/",
