@@ -9,24 +9,37 @@ import Journal from "./components/Journal";
 import ProductSection from "./components/ProductSection";
 import Services from "./components/Services";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bakingtales.com";
+
 export const metadata = {
   title: "Baking Tales | Delicious Handcrafted Cakes & Cupcakes",
-  description: "Experience the finest handcrafted cakes, cupcakes, and baked goods at Baking Tales. Freshly made with love and delivered to your doorstep.",
-  keywords: "bakery, cakes, cupcakes, home made, dessert, ecommerce",
+  description:
+    "Experience the finest handcrafted cakes, cupcakes, and baked goods at Baking Tales. Freshly made with love and delivered to your doorstep.",
+  keywords: "bakery, cakes, cupcakes, home made, dessert, ecommerce, pastries",
+  alternates: {
+    canonical: siteUrl,
+  },
+  openGraph: {
+    title: "Baking Tales | Delicious Handcrafted Cakes & Cupcakes",
+    description:
+      "Experience the finest handcrafted cakes, cupcakes, and artisanal confections made fresh daily.",
+    url: siteUrl,
+    type: "website",
+  },
 };
 
 const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 /**
  * Public feed of products flagged `isFeatured` (and still active).
- * GET /product/featured reuses the /product payload, so every size already
- * carries campaign-aware `originalPrice` / `salesPrice`.
+ * Revalidated every 60s for high-speed SEO caching (ISR).
  */
 async function getFeaturedProducts() {
   try {
-    const response = await fetch(`${backendURL}/product/featured?limit=6`, { cache: 'no-store' });
+    const response = await fetch(`${backendURL}/product/featured?limit=6`, {
+      next: { revalidate: 60 },
+    });
     const data = await response.json();
-    // The backend's sendResponse wrapper: { success, statusCode, message, meta, data }
     return data?.data ?? [];
   } catch (error) {
     console.error("Error fetching featured products:", error);
@@ -35,16 +48,14 @@ async function getFeaturedProducts() {
 }
 
 /**
- * Fetches the single currently-running campaign (isActive=true AND inside its
- * date window) along with its products already hydrated and priced.
- *
- * Returns the campaign object or `null` if there is no active campaign right now.
+ * Fetches the currently-running campaign. Revalidated every 60s.
  */
 async function getActiveCampaign() {
   try {
-    const response = await fetch(`${backendURL}/campaign/active`, { cache: 'no-store' });
+    const response = await fetch(`${backendURL}/campaign/active`, {
+      next: { revalidate: 60 },
+    });
     const data = await response.json();
-    // The backend's sendResponse wrapper: { success, statusCode, message, data }
     return data?.data ?? null;
   } catch (error) {
     console.error("Error fetching active campaign:", error);
@@ -54,22 +65,14 @@ async function getActiveCampaign() {
 
 /**
  * Public storefront category feed — GET /category/public (no auth).
- *
- * Locked server-side to ACTIVE categories in the admin's display order, and
- * every category arrives with ONE `previewProduct` (flavors, images and
- * campaign-aware prices already applied). That makes this the section's only
- * request: the names, the active-product counts and the default preview card
- * all render inside the HTML for crawlers, and switching category later costs
- * no network round trip.
- *
- * The payload is also display-safe: no audit columns and no creator/updater
- * user rows inside this page's HTML.
+ * Revalidated every 60s for instant crawl responses.
  */
 async function getPublicCategories() {
   try {
-    const response = await fetch(`${backendURL}/category/public?limit=3`, { cache: 'no-store' });
+    const response = await fetch(`${backendURL}/category/public?limit=3`, {
+      next: { revalidate: 60 },
+    });
     const data = await response.json();
-    // The backend's sendResponse wrapper: { success, statusCode, message, meta, data }
     return data?.data ?? [];
   } catch (error) {
     console.error("Error fetching categories:", error);
@@ -88,8 +91,27 @@ export default async function Home() {
   // pricing applied, so no second round-trip is needed.
   const campaignProducts = activeCampaign?.products ?? [];
 
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Baking Tales",
+    url: siteUrl,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${siteUrl}/products?search={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  };
+
   return (
     <main className="">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+      />
       <HomeSection>
         <Header />
         <HomeContainer activeCampaign={activeCampaign}>

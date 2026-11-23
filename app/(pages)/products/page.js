@@ -1,14 +1,31 @@
 import Shop from "./Shop";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bakingtales.com";
+
 /**
- * Static SEO for the shop route (the old "use client" page could export no
- * metadata at all, so this tab title used to fall back to "Create Next App").
+ * Static SEO for the shop route.
  */
 export const metadata = {
   title: "Shop All | Baking Tales",
   description:
     "Browse the full Baking Tales collection — handcrafted cakes, cupcakes, pastries and artisanal delicacies, filterable by category, flavour, size and price.",
   keywords: "bakery, cakes, cupcakes, shop, pastries, artisanal, ecommerce",
+  alternates: {
+    canonical: `${siteUrl}/products`,
+  },
+  openGraph: {
+    title: "Shop All Handcrafted Delicacies | Baking Tales",
+    description:
+      "Browse our full collection of artisanal cakes, pastries, and treats.",
+    url: `${siteUrl}/products`,
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Shop All Handcrafted Delicacies | Baking Tales",
+    description:
+      "Browse our full collection of artisanal cakes, pastries, and treats.",
+  },
 };
 
 const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -19,8 +36,7 @@ const first = (value) => (Array.isArray(value) ? value[0] : value);
 
 /**
  * Shop grid — GET /product/public (no auth): ACTIVE products, display-safe
- * fields, campaign-aware prices. Always `no-store`: campaign pricing and
- * stock change at any moment, so this fetch runs on every request.
+ * fields, campaign-aware prices. Revalidated every 60s for high performance.
  */
 async function getProducts({ page, categorySlug, filters }) {
   try {
@@ -34,7 +50,7 @@ async function getProducts({ page, categorySlug, filters }) {
     if (filters.sizeName) params.set("sizeName", filters.sizeName);
 
     const res = await fetch(`${backendURL}/product/public?${params.toString()}`, {
-      cache: "no-store",
+      next: { revalidate: 60 },
     });
     const json = await res.json();
     if (!res.ok || json?.success === false) {
@@ -95,18 +111,43 @@ const ShopPage = async ({ searchParams }) => {
     getPublicList("size/public?limit=0"),
   ]);
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: siteUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Shop",
+        item: `${siteUrl}/products`,
+      },
+    ],
+  };
+
   return (
-    <Shop
-      filters={filters}
-      activeCategorySlug={activeCategorySlug}
-      page={page}
-      products={productsResult.data}
-      productsMeta={productsResult.meta}
-      productsError={productsResult.error}
-      categories={categories}
-      flavors={flavors}
-      sizes={sizes}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <Shop
+        filters={filters}
+        activeCategorySlug={activeCategorySlug}
+        page={page}
+        products={productsResult.data}
+        productsMeta={productsResult.meta}
+        productsError={productsResult.error}
+        categories={categories}
+        flavors={flavors}
+        sizes={sizes}
+      />
+    </>
   );
 };
 

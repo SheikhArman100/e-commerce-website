@@ -1,10 +1,11 @@
-﻿import StatusChecker from "@/Components/StatusChecker.js";
+import StatusChecker from "@/Components/StatusChecker.js";
 import ShowWishlist from "./ShowWishlist.js";
 import { Star } from "lucide-react";
 
 export const metadata = {
   title: "Wishlist | Baking Tales",
   description: "Your curated library of handcrafted pastries, cakes, and artisanal confections.",
+  robots: { index: false, follow: false },
 };
 
 const Wishlist = () => {
