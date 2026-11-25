@@ -146,9 +146,15 @@ const Checkout = () => {
         queryKey: ["user-profile"],
         refetchType: "all",
       });
+      queryClient.invalidateQueries({
+        queryKey: ["user"],
+        refetchType: "all",
+      });
     } catch (error) {
+      const detail = error.response?.data?.errorMessages?.[0]?.message;
       toast.warn(
-        error.response?.data?.message ||
+        detail ||
+          error.response?.data?.message ||
           "We could not save your delivery details, but your order can still be placed."
       );
     }

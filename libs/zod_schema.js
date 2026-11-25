@@ -107,8 +107,8 @@ export const updateProfileSchema = z.object({
     .min(2, "Name must be at least 2 characters")
     .max(50, "Name must not exceed 50 characters")
     .regex(
-      /^[a-zA-Z\s'-]+$/,
-      "Name can only contain letters, spaces, hyphens, and apostrophes"
+      /^[a-zA-Z\s'.-]+$/,
+      "Name can only contain letters, spaces, periods, hyphens, and apostrophes"
     ),
   phoneNumber: z
     .string()
@@ -159,8 +159,8 @@ export const checkoutSchema = z.object({
     .min(2, "Name must be at least 2 characters")
     .max(50, "Name must not exceed 50 characters")
     .regex(
-      /^[a-zA-Z\s'-]+$/,
-      "Name can only contain letters, spaces, hyphens, and apostrophes"
+      /^[a-zA-Z\s'.-]+$/,
+      "Name can only contain letters, spaces, periods, hyphens, and apostrophes"
     ),
   phoneNumber: z
     .string()
