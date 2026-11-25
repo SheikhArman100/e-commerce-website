@@ -114,14 +114,14 @@ const CartItem = ({ item }) => {
   const href = product?.slug ? `/products/${product.slug}` : null;
 
   return (
-    <div className="group/item flex w-full flex-wrap items-center gap-x-6 gap-y-5 border-b border-textColor/10 py-6 last:border-none">
+    <div className="group/item grid w-full grid-cols-[auto_1fr] gap-x-4 gap-y-4 border-b border-textColor/10 py-5 last:border-none sm:gap-x-6 sm:gap-y-3 sm:py-6">
       {/* Photo + quantity badge */}
       <ProductThumb
         path={variant?.productFlavor?.images?.[0]?.path}
         alt={product?.title}
         flavorColor={flavor?.color}
         sizes="(max-width: 768px) 80px, 96px"
-        className="w-20 md:w-24"
+        className="col-start-1 row-start-1 w-20 sm:row-span-2 sm:w-24 sm:self-center"
         badge={
           <span className="absolute -right-1.5 -top-1.5 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-accentColor text-[0.55rem] font-black text-bgColor shadow-lg">
             {quantity}
@@ -129,46 +129,68 @@ const CartItem = ({ item }) => {
         }
       />
 
-      {/* What it is */}
-      <div className="min-w-0 flex-1">
-        {href ? (
-          <Link
-            href={href}
-            className="line-clamp-1 text-[0.7rem] font-black uppercase tracking-[0.2em] text-textColor transition-colors hover:text-accentColor"
-          >
-            {product?.title}
-          </Link>
-        ) : (
-          <p className="line-clamp-1 text-[0.7rem] font-black uppercase tracking-[0.2em] text-textColor">
-            {product?.title}
-          </p>
-        )}
+      {/* Top info: title, category/flavor/size, and unit price */}
+      <div className="col-start-2 row-start-1 flex min-w-0 flex-col gap-y-2 self-center sm:flex-row sm:items-start sm:justify-between sm:gap-x-6">
+        <div className="min-w-0 flex-1">
+          {href ? (
+            <Link
+              href={href}
+              className="line-clamp-2 text-[0.75rem] font-black uppercase leading-snug tracking-[0.14em] text-textColor transition-colors hover:text-accentColor sm:text-[0.7rem] sm:tracking-[0.2em]"
+            >
+              {product?.title}
+            </Link>
+          ) : (
+            <p className="line-clamp-2 text-[0.75rem] font-black uppercase leading-snug tracking-[0.14em] text-textColor sm:text-[0.7rem] sm:tracking-[0.2em]">
+              {product?.title}
+            </p>
+          )}
 
-        <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1">
-          {product?.category?.name && (
-            <span className="text-[0.55rem] font-medium uppercase tracking-[0.2em] text-stone-500">
-              {product.category.name}
+          <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 sm:gap-x-4">
+            {product?.category?.name && (
+              <span className="text-[0.55rem] font-medium uppercase tracking-[0.18em] text-stone-500">
+                {product.category.name}
+              </span>
+            )}
+            {flavor?.name && (
+              <span className="flex items-center gap-x-1.5 text-[0.55rem] font-bold uppercase tracking-[0.18em] text-stone-500">
+                {flavor?.color && (
+                  <span
+                    className="h-2 w-2 shrink-0 rounded-full border border-textColor/20"
+                    style={{ backgroundColor: flavor.color }}
+                  />
+                )}
+                {flavor.name}
+              </span>
+            )}
+            {sizeName && (
+              <span className="text-[0.55rem] font-bold uppercase tracking-[0.18em] text-accentColor">
+                Size {sizeName}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Unit price + discount */}
+        <div className="flex shrink-0 flex-wrap items-center gap-x-2.5 gap-y-1 sm:justify-end">
+          {discounted && (
+            <span className="rounded-full border border-accentColor2/40 bg-accentColor2/20 px-2 py-0.5 text-[0.5rem] font-black uppercase tracking-[0.2em] text-accentColor">
+              -{percent}%
             </span>
           )}
-          {flavor?.name && (
-            <span className="flex items-center gap-x-2 text-[0.55rem] font-bold uppercase tracking-[0.2em] text-stone-500">
-              {flavor?.color && (
-                <span
-                  className="h-2 w-2 rounded-full border border-textColor/20"
-                  style={{ backgroundColor: flavor.color }}
-                />
-              )}
-              {flavor.name}
-            </span>
-          )}
-          {sizeName && (
-            <span className="text-[0.55rem] font-bold uppercase tracking-[0.2em] text-accentColor">
-              Size {sizeName}
+          <span className="text-[0.8rem] font-bold tracking-[0.15em] text-textColor">
+            {formatTaka(price)}
+          </span>
+          {discounted && (
+            <span className="text-[0.6rem] uppercase tracking-[0.15em] text-stone-400 line-through">
+              {formatTaka(original)}
             </span>
           )}
         </div>
+      </div>
 
-        <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+      {/* Bottom controls: stepper + stock hint on left, line total + delete on right */}
+      <div className="col-span-2 row-start-2 flex flex-wrap items-center justify-between gap-x-4 gap-y-2.5 pt-1 sm:col-span-1 sm:col-start-2 sm:pt-0">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
           {/* Quantity stepper — cream type on chocolate, so it is always legible */}
           <div
             className={cn(
@@ -209,45 +231,26 @@ const CartItem = ({ item }) => {
 
           {/* Stock / ceiling hints straight from the variant the API returned */}
           {overStock ? (
-            <span className="text-[0.5rem] font-black uppercase tracking-[0.25em] text-red-500">
+            <span className="text-[0.5rem] font-black uppercase tracking-[0.22em] text-red-500">
               Only {stock} in stock — reduce to continue
             </span>
           ) : stock === 0 ? (
-            <span className="text-[0.5rem] font-black uppercase tracking-[0.25em] text-red-500">
+            <span className="text-[0.5rem] font-black uppercase tracking-[0.22em] text-red-500">
               Out of stock
             </span>
           ) : stock !== null && stock <= LOW_STOCK_THRESHOLD ? (
-            <span className="text-[0.5rem] font-black uppercase tracking-[0.25em] text-stone-400">
+            <span className="text-[0.5rem] font-black uppercase tracking-[0.22em] text-stone-400">
               Only {stock} left
             </span>
           ) : quantity >= ceiling ? (
-            <span className="text-[0.5rem] font-black uppercase tracking-[0.25em] text-stone-400">
+            <span className="text-[0.5rem] font-black uppercase tracking-[0.22em] text-stone-400">
               Max {ceiling} per order
             </span>
           ) : null}
         </div>
-      </div>
 
-      {/* Unit price, discount, line total, remove */}
-      <div className="flex flex-col items-end gap-2">
-        <div className="flex items-center gap-x-3">
-          {discounted && (
-            <span className="rounded-full border border-accentColor2/40 bg-accentColor2/20 px-2 py-0.5 text-[0.5rem] font-black uppercase tracking-[0.2em] text-accentColor">
-              -{percent}%
-            </span>
-          )}
-          <span className="text-[0.8rem] font-bold tracking-[0.15em] text-textColor">
-            {formatTaka(price)}
-          </span>
-          {discounted && (
-            <span className="text-[0.6rem] uppercase tracking-[0.15em] text-stone-400 line-through">
-              {formatTaka(original)}
-            </span>
-          )}
-        </div>
-
-        <div className="flex items-center gap-x-4">
-          <span className="text-[0.6rem] font-medium uppercase tracking-[0.2em] text-stone-500">
+        <div className="ml-auto flex items-center gap-x-3 sm:gap-x-4">
+          <span className="text-[0.6rem] font-medium uppercase tracking-[0.18em] text-stone-500">
             {formatTaka(lineTotal(item))} total
           </span>
           <DeleteButton

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import React, { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -121,16 +121,15 @@ const ProductClient = ({ product, similarProducts = [] }) => {
   ];
 
   return (
-    <div className="relative w-full min-h-screen bg-bgColor pt-20 md:pt-28 pb-24 text-textColor">
-      {/* Ambient background glows */}
+    <div className="relative w-full min-h-screen overflow-x-hidden bg-bgColor pt-20 md:pt-28 pb-24 text-textColor">
+      {/* Ambient background glows (clipped so they never cause horizontal overflow) */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute top-12 right-0 w-[550px] h-[550px] bg-accentColor/4 rounded-full blur-[140px] -translate-y-1/3 translate-x-1/3"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute top-1/2 left-0 w-[600px] h-[600px] bg-accentColor2/4 rounded-full blur-[150px] -translate-x-1/3"
-      />
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+      >
+        <div className="absolute top-12 right-0 w-[550px] h-[550px] bg-accentColor/4 rounded-full blur-[140px] -translate-y-1/3 translate-x-1/3" />
+        <div className="absolute top-1/2 left-0 w-[600px] h-[600px] bg-accentColor2/4 rounded-full blur-[150px] -translate-x-1/3" />
+      </div>
 
       <div className="relative z-10 max-w-[1500px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
         {/* Navigation / Breadcrumb */}
@@ -169,7 +168,7 @@ const ProductClient = ({ product, similarProducts = [] }) => {
         {/* Two-Column Product Dossier */}
         <div className="flex flex-col lg:flex-row gap-10 lg:gap-14 xl:gap-20 items-start">
           {/* Column 1: Gallery Showcase */}
-          <div className="w-full lg:w-1/2 xl:w-[52%]">
+          <div className="w-full lg:w-1/2 xl:w-[52%] min-w-0">
             <div className="relative flex flex-col gap-4">
               {/* Main Showcase Stage */}
               <div className="relative aspect-square sm:aspect-[4/3] lg:aspect-square w-full rounded-2xl border border-textColor/10 bg-white/80 shadow-sm overflow-hidden flex items-center justify-center backdrop-blur-sm">
@@ -229,7 +228,7 @@ const ProductClient = ({ product, similarProducts = [] }) => {
                         type="button"
                         onClick={() => setSelectedImageIndex(i)}
                         className={cn(
-                          "relative h-18 w-18 sm:h-20 sm:w-20 rounded-lg border bg-white/80 shrink-0 overflow-hidden transition-all duration-200",
+                          "relative h-16 w-16 sm:h-20 sm:w-20 rounded-lg border bg-white/80 shrink-0 overflow-hidden transition-all duration-200",
                           isSelected
                             ? "border-accentColor ring-2 ring-accentColor/30 shadow-sm scale-102"
                             : "border-textColor/10 hover:border-accentColor/40 opacity-70 hover:opacity-100"
@@ -252,19 +251,19 @@ const ProductClient = ({ product, similarProducts = [] }) => {
           </div>
 
           {/* Column 2: Delicacy Dossier & Actions */}
-          <div className="w-full lg:w-1/2 xl:w-[48%] flex flex-col space-y-8">
+          <div className="w-full lg:w-1/2 xl:w-[48%] min-w-0 flex flex-col space-y-8">
             {/* Header Info */}
             <div className="space-y-4">
               {/* Campaign Indicator */}
               {product.activeCampaign && (
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accentColor/10 border border-accentColor/25 text-accentColor text-[11px] font-bold uppercase tracking-widest">
-                  <Sparkles className="w-3 h-3 text-accentColor" />
-                  <span>Part of {product.activeCampaign.title}</span>
+                <div className="inline-flex max-w-full items-center gap-2 px-3 py-1 rounded-full bg-accentColor/10 border border-accentColor/25 text-accentColor text-[11px] font-bold uppercase tracking-widest">
+                  <Sparkles className="w-3 h-3 shrink-0 text-accentColor" />
+                  <span className="truncate">Part of {product.activeCampaign.title}</span>
                 </div>
               )}
 
               {/* Product Title */}
-              <h1 className="text-3xl sm:text-4xl xl:text-5xl font2 font-medium text-textColor tracking-tight leading-[1.15]">
+              <h1 className="text-3xl sm:text-4xl xl:text-5xl font2 font-medium text-textColor tracking-tight leading-[1.15] break-words">
                 {product.title}
               </h1>
 
@@ -433,7 +432,7 @@ const ProductClient = ({ product, similarProducts = [] }) => {
             </div>
 
             {/* Grid of Authentic Cards */}
-            <div className="w-full grid place-items-center grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-10">
+            <div className="w-full grid place-items-center grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 md:gap-10">
               {similarProducts.map((item, idx) => {
                 const offer = resolveProductOffer(item);
                 if (!offer) return null;

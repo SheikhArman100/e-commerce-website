@@ -24,7 +24,7 @@ const OrderProgress = ({ status, history = [] }) => {
 
     return (
       <div
-        className={`flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-textColor/10 px-6 py-5 md:px-8 ${
+        className={`flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-textColor/10 px-4 py-4 sm:px-6 sm:py-5 md:px-8 ${
           failed ? "bg-red-50/60" : "bg-stone-50/60"
         }`}
       >
@@ -57,7 +57,7 @@ const OrderProgress = ({ status, history = [] }) => {
   );
 
   return (
-    <ol className="flex items-start border-b border-textColor/10 px-6 py-6 md:px-8">
+    <ol className="flex items-start border-b border-textColor/10 px-4 py-5 sm:px-6 sm:py-6 md:px-8">
       {ORDER_PIPELINE.map((step, index) => {
         const done = index < reachedIndex;
         const current = index === reachedIndex;
@@ -78,7 +78,7 @@ const OrderProgress = ({ status, history = [] }) => {
         return (
           <li
             key={step.status}
-            className="flex flex-1 flex-col items-center gap-y-2 text-center"
+            className="flex min-w-0 flex-1 flex-col items-center gap-y-2 px-0.5 text-center"
           >
             <div className="flex w-full items-center">
               <span className={`h-[1px] flex-1 ${lineLeft}`} />
@@ -105,7 +105,7 @@ const OrderProgress = ({ status, history = [] }) => {
             </div>
 
             <span
-              className={`text-[0.5rem] font-black uppercase tracking-[0.2em] sm:text-[0.55rem] ${
+              className={`text-[0.5rem] font-black uppercase tracking-[0.12em] sm:text-[0.55rem] sm:tracking-[0.2em] ${
                 current
                   ? "text-accentColor"
                   : done

@@ -144,7 +144,7 @@ const CartContainer = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="w-full rounded-sm border border-textColor/10 bg-white/50 px-6 shadow-lg backdrop-blur-[20px] md:px-8"
+            className="w-full rounded-sm border border-textColor/10 bg-white/50 px-4 shadow-lg backdrop-blur-[20px] sm:px-6 md:px-8"
           >
             {items.map((item) => (
               <CartItem key={item.id} item={item} />

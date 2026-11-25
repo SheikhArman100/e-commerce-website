@@ -54,19 +54,19 @@ const ReviewSection = ({ product }) => {
               ))}
             </div>
           </aside>
-          <div className="space-y-4">
+          <div className="min-w-0 space-y-4">
             {reviews.map((r) => {
               const name = r.user?.name || "Verified Guest";
               const av = r.user?.detail?.image?.path || r.user?.detail?.profileImage || null;
               return (
                 <article key={r.id} className="rounded-2xl border border-textColor/10 bg-white/80 shadow-sm p-5 sm:p-6">
                   <div className="flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3">
+                    <div className="flex min-w-0 items-center gap-3">
                       <div className="relative h-10 w-10 rounded-full overflow-hidden border border-textColor/10 bg-accentColor/10 flex items-center justify-center shrink-0">
                         {av ? <Image src={`${fileBase}/${av}`} alt={name} fill className="object-cover" sizes="40px" /> : <span className="font2 font-bold text-accentColor text-sm">{(name[0] || "G").toUpperCase()}</span>}
                       </div>
-                      <div>
-                        <p className="text-sm font-bold flex items-center gap-1.5">{name}
+                      <div className="min-w-0">
+                        <p className="text-sm font-bold flex flex-wrap items-center gap-1.5">{name}
                           <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-px rounded-full"><BadgeCheck className="w-3 h-3" />Verified</span>
                         </p>
                         <p className="text-[11px] text-stone-500 font-light mt-0.5">{fmt(r.createdAt)}</p>
@@ -74,7 +74,7 @@ const ReviewSection = ({ product }) => {
                     </div>
                     <Stars value={r.rating} />
                   </div>
-                  <p className="text-sm text-stone-600 font-light leading-relaxed mt-4">{r.comment}</p>
+                  <p className="text-sm text-stone-600 font-light leading-relaxed mt-4 break-words">{r.comment}</p>
                   {r.images?.length > 0 && (
                     <div className="flex flex-wrap gap-2.5 mt-4">
                       {r.images.map((img) => (

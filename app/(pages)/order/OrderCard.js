@@ -49,7 +49,7 @@ const OrderItemRow = ({ item, order, pending = [], onReview }) => {
   );
 
   return (
-    <div className="group/item flex items-center gap-x-4 py-4 md:gap-x-6">
+    <div className="group/item flex items-start gap-x-3 py-4 sm:items-center sm:gap-x-4 md:gap-x-6">
       {/* Thumbnail + quantity badge */}
       <div className="relative shrink-0">
         <div className="relative aspect-square w-14 overflow-hidden rounded-sm border border-textColor/10 bg-white shadow-inner transition-colors group-hover/item:border-accentColor/30 md:w-16">
@@ -81,25 +81,31 @@ const OrderItemRow = ({ item, order, pending = [], onReview }) => {
 
       {/* Snapshot details */}
       <div className="min-w-0 flex-1 text-left">
-        {href ? (
-          <Link
-            href={href}
-            className="line-clamp-1 text-[0.7rem] font-black uppercase tracking-[0.2em] text-textColor transition-colors hover:text-accentColor"
-          >
-            {title}
-          </Link>
-        ) : (
-          <p className="line-clamp-1 text-[0.7rem] font-black uppercase tracking-[0.2em] text-textColor">
-            {title}
-          </p>
-        )}
+        <div className="flex items-start justify-between gap-x-3">
+          {href ? (
+            <Link
+              href={href}
+              className="line-clamp-2 text-[0.7rem] font-black uppercase leading-snug tracking-[0.14em] text-textColor transition-colors hover:text-accentColor sm:tracking-[0.2em]"
+            >
+              {title}
+            </Link>
+          ) : (
+            <p className="line-clamp-2 text-[0.7rem] font-black uppercase leading-snug tracking-[0.14em] text-textColor sm:tracking-[0.2em]">
+              {title}
+            </p>
+          )}
 
-        <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1">
+          <p className="shrink-0 text-[0.75rem] font-bold tracking-[0.12em] text-textColor sm:hidden">
+            {formatAmount(orderItemLine(item))}
+          </p>
+        </div>
+
+        <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 sm:gap-x-4">
           {flavor.name && (
-            <span className="flex items-center gap-x-2 text-[0.55rem] font-bold uppercase tracking-[0.2em] text-stone-500">
+            <span className="flex items-center gap-x-1.5 text-[0.55rem] font-bold uppercase tracking-[0.16em] text-stone-500 sm:gap-x-2 sm:tracking-[0.2em]">
               {flavor.color && (
                 <span
-                  className="h-2 w-2 rounded-full border border-textColor/20"
+                  className="h-2 w-2 shrink-0 rounded-full border border-textColor/20"
                   style={{ backgroundColor: flavor.color }}
                 />
               )}
@@ -107,11 +113,11 @@ const OrderItemRow = ({ item, order, pending = [], onReview }) => {
             </span>
           )}
           {size && (
-            <span className="text-[0.55rem] font-bold uppercase tracking-[0.2em] text-accentColor">
+            <span className="text-[0.55rem] font-bold uppercase tracking-[0.16em] text-accentColor sm:tracking-[0.2em]">
               Size {size}
             </span>
           )}
-          <span className="text-[0.55rem] font-medium uppercase tracking-[0.2em] text-stone-400">
+          <span className="text-[0.55rem] font-medium uppercase tracking-[0.16em] text-stone-400 sm:tracking-[0.2em]">
             {formatAmount(item?.price)} each
           </span>
           {reviewTarget && (
@@ -127,7 +133,7 @@ const OrderItemRow = ({ item, order, pending = [], onReview }) => {
         </div>
       </div>
 
-      <p className="shrink-0 text-[0.75rem] font-bold tracking-[0.15em] text-textColor">
+      <p className="hidden shrink-0 text-[0.75rem] font-bold tracking-[0.15em] text-textColor sm:block">
         {formatAmount(orderItemLine(item))}
       </p>
     </div>
@@ -161,15 +167,15 @@ const OrderCard = ({ order, index = 0, pending = [], onReview }) => {
       className="w-full overflow-hidden rounded-sm border border-textColor/10 bg-white/50 shadow-lg backdrop-blur-[20px] transition-all duration-500 hover:border-accentColor/25 hover:shadow-xl"
     >
       {/* Reference, date, payment + status */}
-      <header className="flex flex-col gap-5 border-b border-textColor/10 px-6 py-6 md:flex-row md:items-center md:justify-between md:px-8">
-        <div className="flex flex-col gap-1 text-left">
+      <header className="flex flex-col gap-4 border-b border-textColor/10 px-4 py-5 sm:gap-5 sm:px-6 sm:py-6 md:flex-row md:items-center md:justify-between md:px-8">
+        <div className="flex min-w-0 flex-col gap-1 text-left">
           <span className="text-[0.5rem] font-black uppercase tracking-[0.45em] text-stone-400">
             Order
           </span>
-          <h3 className="text-sm font-black uppercase tracking-[0.2em] text-textColor md:text-base">
+          <h3 className="break-all text-sm font-black uppercase tracking-[0.16em] text-textColor sm:break-normal sm:tracking-[0.2em] md:text-base">
             {orderReference(order)}
           </h3>
-          <p className="flex items-center gap-x-2 text-[0.55rem] font-medium uppercase tracking-[0.25em] text-stone-500">
+          <p className="flex items-center gap-x-2 text-[0.55rem] font-medium uppercase tracking-[0.2em] text-stone-500 sm:tracking-[0.25em]">
             <CalendarDays size={11} className="shrink-0 stroke-stone-400" />
             {formatDate(order?.createdAt)}
           </p>
@@ -207,7 +213,7 @@ const OrderCard = ({ order, index = 0, pending = [], onReview }) => {
 
       {/* What was bought */}
       {items.length > 0 ? (
-        <div className="px-6 md:px-8">
+        <div className="px-4 sm:px-6 md:px-8">
           <div className="flex flex-col divide-y divide-textColor/10">
             {visibleItems.map((item) => (
               <OrderItemRow
@@ -237,14 +243,14 @@ const OrderCard = ({ order, index = 0, pending = [], onReview }) => {
           )}
         </div>
       ) : (
-        <p className="px-6 py-8 text-[0.6rem] uppercase tracking-[0.25em] text-stone-500 md:px-8">
+        <p className="px-4 py-8 text-[0.6rem] uppercase tracking-[0.25em] text-stone-500 sm:px-6 md:px-8">
           No items were recorded for this order.
         </p>
       )}
 
       {/* Money breakdown */}
-      <footer className="flex flex-col gap-6 border-t border-textColor/10 bg-textColor/[0.02] px-6 py-6 md:flex-row md:items-center md:justify-between md:px-8">
-        <dl className="flex flex-wrap items-center gap-x-8 gap-y-4">
+      <footer className="flex flex-col gap-5 border-t border-textColor/10 bg-textColor/[0.02] px-4 py-5 sm:gap-6 sm:px-6 sm:py-6 md:flex-row md:items-center md:justify-between md:px-8">
+        <dl className="grid grid-cols-2 gap-x-6 gap-y-4 sm:flex sm:flex-wrap sm:items-center sm:gap-x-8">
           <div className="flex flex-col gap-1 text-left">
             <dt className="text-[0.5rem] font-black uppercase tracking-[0.35em] text-stone-400">
               Items
@@ -284,7 +290,7 @@ const OrderCard = ({ order, index = 0, pending = [], onReview }) => {
           </div>
         </dl>
 
-        <div className="flex items-baseline gap-x-4 md:justify-end">
+        <div className="flex items-baseline justify-between gap-x-4 border-t border-textColor/10 pt-4 sm:justify-start sm:border-t-0 sm:pt-0 md:justify-end">
           <span className="text-[0.55rem] font-black uppercase tracking-[0.35em] text-stone-500">
             {paid ? "Total Paid" : "Order Total"}
           </span>
